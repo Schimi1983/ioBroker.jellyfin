@@ -27,6 +27,7 @@ var import_ids = require("./lib/ids");
 var import_objects = require("./lib/objects");
 var import_commands = require("./lib/commands");
 var import_session = require("./lib/session");
+const OWN_DEVICE_PREFIX = "ioBroker-";
 const MIN_SERVER_MAJOR = 12;
 const RECONNECT_MIN_MS = 5e3;
 const RECONNECT_MAX_MS = 6e4;
@@ -342,7 +343,7 @@ class Jellyfin extends utils.Adapter {
     var _a, _b;
     const current = /* @__PURE__ */ new Map();
     for (const s of list) {
-      if (!(s == null ? void 0 : s.DeviceId) || !s.Id || s.DeviceId === this.ownDeviceId) {
+      if (!(s == null ? void 0 : s.DeviceId) || !s.Id || s.DeviceId.startsWith(OWN_DEVICE_PREFIX)) {
         continue;
       }
       const id = (0, import_ids.deviceObjectId)(s.DeviceId);

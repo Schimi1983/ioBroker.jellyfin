@@ -10,6 +10,8 @@ import { parseGeneralCommand, parseMessage, type MessagePayload } from './lib/co
 import { checkCommand, reportsAudio, sessionValues, type CommandKind } from './lib/session';
 import type { PlaystateCommand, RepeatMode, SessionInfo, SocketMessage, SystemInfo } from './lib/types';
 
+/** DeviceId prefix of all ioBroker connections (`ioBroker-jellyfin.0`, …); filtered out of the device list. */
+const OWN_DEVICE_PREFIX = 'ioBroker-';
 /** Minimum supported Jellyfin major version. */
 const MIN_SERVER_MAJOR = 12;
 /** First and maximum reconnect delay. */
@@ -354,7 +356,8 @@ class Jellyfin extends utils.Adapter {
     private async handleSessions(list: SessionInfo[]): Promise<void> {
         const current = new Map<string, SessionInfo>();
         for (const s of list) {
-            if (!s?.DeviceId || !s.Id || s.DeviceId === this.ownDeviceId) {
+            // @KI_HINWEIS: sessions of ioBroker itself (this and other jellyfin instances, test scripts) are no devices
+            if (!s?.DeviceId || !s.Id || s.DeviceId.startsWith(OWN_DEVICE_PREFIX)) {
                 continue;
             }
             const id = deviceObjectId(s.DeviceId);
