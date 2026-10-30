@@ -1,5 +1,25 @@
 {
-    "jellyfin adapter settings": "Ajustes del adaptador para jellyfin",
-    "option1": "opción1",
-    "option2": "opción2"
+    "error_apiKey": "Por favor ingrese la clave API",
+    "error_url": "Por favor ingrese la dirección del servidor",
+    "header_connection": "servidor Jellyfin",
+    "header_guide": "Cómo configurarlo",
+    "header_options": "Opciones",
+    "header_support": "Apoyar el desarrollo",
+    "help_apiKey": "Panel de Jellyfin → Claves API → +",
+    "help_coverHeight": "Tamaño de las imágenes de portada en píxeles, 0 = tamaño original",
+    "help_onlyRemote": "Muchas aplicaciones se registran dos veces en el servidor (aplicación y reproductor). Con esta opción sólo se crea la parte que acepta comandos.",
+    "help_requestTimeout": "Tiempo máximo de espera para una respuesta del servidor",
+    "help_updateInterval": "Con qué frecuencia el servidor envía el estado de reproducción (2–60 s)",
+    "help_url": "Dirección tal como la abre en el navegador, incl. puerto, p.e. http://192.168.1.10:8096",
+    "label_apiKey": "clave API",
+    "label_coverHeight": "Altura de la cubierta",
+    "label_onlyRemote": "Mostrar solo dispositivos que se pueden controlar",
+    "label_requestTimeout": "Solicitar tiempo de espera",
+    "label_updateInterval": "Intervalo de actualización",
+    "label_url": "Dirección del servidor",
+    "link_guide": "abrir la guía",
+    "link_paypal": "Donar a través de PayPal",
+    "link_sponsor": "Patrocinadores de GitHub",
+    "support_text": "El adaptador es gratuito. Si te resulta útil, puedes apoyar su desarrollo de forma voluntaria.",
+    "text_guide": "1. En Jellyfin, abra Panel → Claves API y cree una nueva clave llamada \"ioBroker\". 2. Ingrese la dirección de su servidor Jellyfin y la clave a continuación. 3. Guardar: cada aplicación Jellyfin que se conecta al servidor aparece como un dispositivo con su estado de reproducción y sus botones. Consejo para la aplicación Jellyfin en teléfonos: elija el reproductor web en la configuración de la aplicación; de lo contrario, la reproducción no se puede controlar de forma remota."
 }

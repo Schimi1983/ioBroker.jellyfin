@@ -4,8 +4,18 @@
 declare global {
     namespace ioBroker {
         interface AdapterConfig {
-            option1: boolean;
-            option2: string;
+            /** Server address incl. port and optional base path */
+            url: string;
+            /** API key (encrypted) */
+            apiKey: string;
+            /** Interval of the session push in seconds */
+            updateInterval: number;
+            /** Max. cover height in px, 0 = original */
+            coverHeight: number;
+            /** Only create devices that can be remote-controlled */
+            onlyRemoteControllable: boolean;
+            /** Request timeout in seconds */
+            requestTimeout: number;
         }
     }
 }

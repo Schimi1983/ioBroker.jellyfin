@@ -1,5 +1,25 @@
 {
-    "jellyfin adapter settings": "Adapterinstellingen voor jellyfin",
-    "option1": "optie1",
-    "option2": "optie2"
+    "error_apiKey": "Voer de API-sleutel in",
+    "error_url": "Voer het serveradres in",
+    "header_connection": "Jellyfin-server",
+    "header_guide": "Hoe je het moet instellen",
+    "header_options": "Opties",
+    "header_support": "Ondersteun de ontwikkeling",
+    "help_apiKey": "Jellyfin-dashboard → API-sleutels → +",
+    "help_coverHeight": "Grootte van de omslagafbeeldingen in pixels, 0 = originele grootte",
+    "help_onlyRemote": "Veel apps registreren zich tweemaal bij de server (app en speler). Met deze optie wordt alleen het gedeelte gemaakt dat opdrachten accepteert.",
+    "help_requestTimeout": "Maximale wachttijd voor antwoord van de server",
+    "help_updateInterval": "Hoe vaak de server de afspeelstatus verzendt (2-60 s)",
+    "help_url": "Adres zoals u het in de browser opent, incl. haven, bijv. http://192.168.1.10:8096",
+    "label_apiKey": "API-sleutel",
+    "label_coverHeight": "Deksel hoogte",
+    "label_onlyRemote": "Toon alleen apparaten die bestuurbaar zijn",
+    "label_requestTimeout": "Time-out aanvragen",
+    "label_updateInterval": "Update-interval",
+    "label_url": "Serveradres",
+    "link_guide": "Open de gids",
+    "link_paypal": "Doneer via PayPal",
+    "link_sponsor": "GitHub-sponsors",
+    "support_text": "De adapter is gratis. Als het voor u nuttig is, kunt u de ontwikkeling ervan vrijwillig ondersteunen.",
+    "text_guide": "1. Open in Jellyfin Dashboard → API-sleutels en maak een nieuwe sleutel met de naam \"ioBroker\". 2. Voer het adres van uw Jellyfin-server en de onderstaande sleutel in. 3. Opslaan – elke Jellyfin-app die verbinding maakt met de server verschijnt dan als een apparaat met zijn afspeelstatus en knoppen. Tip voor de Jellyfin app op telefoons: kies in de app-instellingen de webplayer, anders is de weergave niet op afstand te bedienen."
 }

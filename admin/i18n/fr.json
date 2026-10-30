@@ -1,5 +1,25 @@
 {
-    "jellyfin adapter settings": "Paramètres d'adaptateur pour jellyfin",
-    "option1": "option1",
-    "option2": "option2"
+    "error_apiKey": "Veuillez saisir la clé API",
+    "error_url": "Veuillez entrer l'adresse du serveur",
+    "header_connection": "Serveur Jellyfin",
+    "header_guide": "Comment le configurer",
+    "header_options": "Possibilités",
+    "header_support": "Accompagner le développement",
+    "help_apiKey": "Tableau de bord Jellyfin → Clés API → +",
+    "help_coverHeight": "Taille des images de couverture en pixels, 0 = taille originale",
+    "help_onlyRemote": "De nombreuses applications s'enregistrent deux fois auprès du serveur (application et lecteur). Avec cette option, seule la partie qui accepte les commandes est créée.",
+    "help_requestTimeout": "Temps d'attente maximum pour une réponse du serveur",
+    "help_updateInterval": "À quelle fréquence le serveur envoie l'état de lecture (2 à 60 s)",
+    "help_url": "Adresse telle que vous l'ouvrez dans le navigateur, incl. port, par ex. http://192.168.1.10:8096",
+    "label_apiKey": "Clé API",
+    "label_coverHeight": "Hauteur du couvercle",
+    "label_onlyRemote": "Afficher uniquement les appareils pouvant être contrôlés",
+    "label_requestTimeout": "Expiration du délai de demande",
+    "label_updateInterval": "Intervalle de mise à jour",
+    "label_url": "Adresse du serveur",
+    "link_guide": "Ouvrir le guide",
+    "link_paypal": "Faites un don via PayPal",
+    "link_sponsor": "Commanditaires GitHub",
+    "support_text": "L'adaptateur est gratuit. Si cela vous est utile, vous pouvez soutenir volontairement son développement.",
+    "text_guide": "1. Dans Jellyfin, ouvrez le tableau de bord → Clés API et créez une nouvelle clé nommée « ioBroker ». 2. Saisissez l'adresse de votre serveur Jellyfin et la clé ci-dessous. 3. Enregistrer – chaque application Jellyfin qui se connecte au serveur apparaît alors comme un appareil avec son état de lecture et ses boutons. Astuce pour l'application Jellyfin sur téléphone : choisissez le lecteur web dans les paramètres de l'application, sinon la lecture ne pourra pas être contrôlée à distance."
 }

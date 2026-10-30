@@ -1,5 +1,25 @@
 {
-    "jellyfin adapter settings": "Ustawienia adaptera dla jellyfin",
-    "option1": "opcja 1",
-    "option2": "opcja 2"
+    "error_apiKey": "Proszę wprowadzić klucz API",
+    "error_url": "Proszę wpisać adres serwera",
+    "header_connection": "Serwer Jellyfin",
+    "header_guide": "Jak to skonfigurować",
+    "header_options": "Opcje",
+    "header_support": "Wspieraj rozwój",
+    "help_apiKey": "Panel Jellyfin → Klucze API → +",
+    "help_coverHeight": "Rozmiar obrazów okładek w pikselach, 0 = rozmiar oryginalny",
+    "help_onlyRemote": "Wiele aplikacji rejestruje się dwukrotnie na serwerze (aplikacja i odtwarzacz). Dzięki tej opcji tworzona jest tylko część, która akceptuje polecenia.",
+    "help_requestTimeout": "Maksymalny czas oczekiwania na odpowiedź z serwera",
+    "help_updateInterval": "Jak często serwer wysyła stan odtwarzania (2–60 s)",
+    "help_url": "Adres po otwarciu w przeglądarce, m.in. portu, np. http://192.168.1.10:8096",
+    "label_apiKey": "Klucz API",
+    "label_coverHeight": "Wysokość pokrywy",
+    "label_onlyRemote": "Pokazuj tylko urządzenia, którymi można sterować",
+    "label_requestTimeout": "Poproś o przekroczenie limitu czasu",
+    "label_updateInterval": "Interwał aktualizacji",
+    "label_url": "Adres serwera",
+    "link_guide": "Otwórz przewodnik",
+    "link_paypal": "Przekaż darowiznę za pośrednictwem PayPal",
+    "link_sponsor": "Sponsorzy GitHuba",
+    "support_text": "Adapter jest bezpłatny. Jeśli jest dla Ciebie przydatny, możesz dobrowolnie wesprzeć jego rozwój.",
+    "text_guide": "1. W Jellyfin otwórz Dashboard → Klucze API i utwórz nowy klucz o nazwie „ioBroker”. 2. Wpisz adres swojego serwera Jellyfin i klucz poniżej. 3. Zapisz – każda aplikacja Jellyfin, która łączy się z serwerem, pojawia się jako urządzenie ze statusem odtwarzania i przyciskami. Wskazówka dotycząca aplikacji Jellyfin na telefonach: wybierz odtwarzacz internetowy w ustawieniach aplikacji, w przeciwnym razie zdalnym sterowaniem odtwarzaniem nie będzie można."
 }

@@ -1,5 +1,25 @@
 {
-    "jellyfin adapter settings": "jellyfin的适配器设置",
-    "option1": "选项1",
-    "option2": "选项2"
+    "error_apiKey": "请输入API密钥",
+    "error_url": "请输入服务器地址",
+    "header_connection": "Jellyfin 服务器",
+    "header_guide": "如何设置",
+    "header_options": "选项",
+    "header_support": "支持发展",
+    "help_apiKey": "Jellyfin 仪表板 → API 密钥 → +",
+    "help_coverHeight": "封面图像的大小（以像素为单位），0 = 原始大小",
+    "help_onlyRemote": "许多应用程序向服务器注册两次（应用程序和播放器）。使用此选项，仅创建接受命令的部分。",
+    "help_requestTimeout": "服务器应答的最长等待时间",
+    "help_updateInterval": "服务器发送播放状态的频率（2-60 秒）",
+    "help_url": "在浏览器中打开它时的地址，包括。端口，例如http://192.168.1.10:8096",
+    "label_apiKey": "API密钥",
+    "label_coverHeight": "盖板高度",
+    "label_onlyRemote": "只显示可以控制的设备",
+    "label_requestTimeout": "请求超时",
+    "label_updateInterval": "更新间隔",
+    "label_url": "服务器地址",
+    "link_guide": "打开指南",
+    "link_paypal": "通过 PayPal 捐赠",
+    "link_sponsor": "GitHub 赞助商",
+    "support_text": "适配器是免费的。如果对您有用，您可以自愿支持其开发。",
+    "text_guide": "1. 在 Jellyfin 中打开仪表板 → API 密钥并创建一个名为“ioBroker”的新密钥。 2. 输入 Jellyfin 服务器的地址和下面的密钥。 3. 保存 – 连接到服务器的每个 Jellyfin 应用程序都会显示为具有播放状态和按钮的设备。手机上 Jellyfin 应用程序提示：在应用程序设置中选择网络播放器，否则无法远程控制播放。"
 }

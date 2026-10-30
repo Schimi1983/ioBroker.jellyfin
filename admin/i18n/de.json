@@ -1,5 +1,25 @@
 {
-    "jellyfin adapter settings": "Adaptereinstellungen für jellyfin",
-    "option1": "Option1",
-    "option2": "Option2"
+    "error_apiKey": "Bitte den API-Schlüssel eintragen",
+    "error_url": "Bitte die Server-Adresse eintragen",
+    "header_connection": "Jellyfin-Server",
+    "header_guide": "So richtest du den Adapter ein",
+    "header_options": "Optionen",
+    "header_support": "Entwicklung unterstützen",
+    "help_apiKey": "Jellyfin-Dashboard → API-Schlüssel → +",
+    "help_coverHeight": "Größe der Cover-Bilder in Pixeln, 0 = Originalgröße",
+    "help_onlyRemote": "Viele Apps melden sich doppelt beim Server an (App und Player). Mit dieser Option wird nur der Teil angelegt, der Befehle annimmt.",
+    "help_requestTimeout": "Maximale Wartezeit auf eine Antwort des Servers",
+    "help_updateInterval": "Wie oft der Server den Wiedergabestatus sendet (2–60 s)",
+    "help_url": "Adresse wie im Browser, mit Port, z. B. http://192.168.1.10:8096",
+    "label_apiKey": "API-Schlüssel",
+    "label_coverHeight": "Cover-Höhe",
+    "label_onlyRemote": "Nur steuerbare Geräte anzeigen",
+    "label_requestTimeout": "Zeitlimit für Anfragen",
+    "label_updateInterval": "Aktualisierung",
+    "label_url": "Server-Adresse",
+    "link_guide": "Anleitung öffnen",
+    "link_paypal": "Per PayPal spenden",
+    "link_sponsor": "GitHub Sponsors",
+    "support_text": "Der Adapter ist kostenlos. Wenn er dir nützt, kannst du die Entwicklung freiwillig unterstützen.",
+    "text_guide": "1. In Jellyfin Dashboard → API-Schlüssel öffnen und einen neuen Schlüssel mit dem Namen \"ioBroker\" anlegen. 2. Unten die Adresse deines Jellyfin-Servers und den Schlüssel eintragen. 3. Speichern – jede Jellyfin-App, die mit dem Server verbunden ist, erscheint dann als Gerät mit Wiedergabestatus und Tasten. Tipp für die Jellyfin-App auf dem Handy: in den App-Einstellungen den Web-Player wählen, sonst lässt sich die Wiedergabe nicht fernsteuern."
 }

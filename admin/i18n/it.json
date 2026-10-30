@@ -1,5 +1,25 @@
 {
-    "jellyfin adapter settings": "Impostazioni dell'adattatore per jellyfin",
-    "option1": "opzione1",
-    "option2": "opzione2"
+    "error_apiKey": "Inserisci la chiave API",
+    "error_url": "Inserisci l'indirizzo del server",
+    "header_connection": "Server Jellyfin",
+    "header_guide": "Come configurarlo",
+    "header_options": "Opzioni",
+    "header_support": "Sostenere lo sviluppo",
+    "help_apiKey": "Dashboard Jellyfin → Chiavi API → +",
+    "help_coverHeight": "Dimensione delle immagini di copertina in pixel, 0 = dimensione originale",
+    "help_onlyRemote": "Molte app si registrano due volte sul server (app e lettore). Con questa opzione viene creata solo la parte che accetta i comandi.",
+    "help_requestTimeout": "Tempo massimo di attesa per una risposta dal server",
+    "help_updateInterval": "La frequenza con cui il server invia lo stato di riproduzione (2–60 s)",
+    "help_url": "Indirizzo così come lo apri nel browser, incl. porto, ad es. http://192.168.1.10:8096",
+    "label_apiKey": "Chiave API",
+    "label_coverHeight": "Altezza della copertura",
+    "label_onlyRemote": "Mostra solo i dispositivi che possono essere controllati",
+    "label_requestTimeout": "Richiedi timeout",
+    "label_updateInterval": "Intervallo di aggiornamento",
+    "label_url": "Indirizzo del server",
+    "link_guide": "Apri la guida",
+    "link_paypal": "Dona tramite PayPal",
+    "link_sponsor": "Sponsor di GitHub",
+    "support_text": "L'adattatore è gratuito. Se ti è utile, puoi sostenere il suo sviluppo volontariamente.",
+    "text_guide": "1. In Jellyfin apri Dashboard → Chiavi API e crea una nuova chiave denominata \"ioBroker\". 2. Inserisci l'indirizzo del tuo server Jellyfin e la chiave qui sotto. 3. Salva: ogni app Jellyfin che si connette al server appare quindi come un dispositivo con il suo stato di riproduzione e i suoi pulsanti. Suggerimento per l'app Jellyfin sui telefoni: scegli il web player nelle impostazioni dell'app, altrimenti la riproduzione non può essere controllata da remoto."
 }

@@ -22,6 +22,11 @@ export default [
         ],
     },
     {
+        // DTO fields of the Jellyfin API are named like the API itself, no JSDoc per field
+        files: ['src/lib/types.ts'],
+        rules: { 'jsdoc/require-jsdoc': 'off' },
+    },
+    {
         // you may disable some 'jsdoc' warnings - but using jsdoc is highly recommended
         // as this improves maintainability. jsdoc warnings will not block build process.
         rules: {

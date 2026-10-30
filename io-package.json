@@ -19,16 +19,16 @@
         },
         "titleLang": {
             "en": "Jellyfin",
-            "de": "Qualle",
-            "ru": "Желфин",
-            "pt": "Geleia",
-            "nl": "Kwallen",
-            "fr": "Gelée",
+            "de": "Jellyfin",
+            "ru": "Jellyfin",
+            "pt": "Jellyfin",
+            "nl": "Jellyfin",
+            "fr": "Jellyfin",
             "it": "Jellyfin",
-            "es": "medusa",
-            "pl": "Galaretka",
+            "es": "Jellyfin",
+            "pl": "Jellyfin",
             "uk": "Jellyfin",
-            "zh-cn": "果冻"
+            "zh-cn": "Jellyfin"
         },
         "desc": {
             "en": "Monitor and control Jellyfin media server sessions (playback, remote control, messages)",
@@ -43,8 +43,17 @@
             "uk": "Відстежуйте та контролюйте сеанси медіа-сервера Jellyfin (відтворення, дистанційне керування, повідомлення)",
             "zh-cn": "监视和控制 Jellyfin 媒体服务器会话（播放、远程控制、消息）"
         },
-        "authors": ["Schimi <github@world-mg.de>"],
-        "keywords": ["jellyfin", "media server", "media", "video", "remote", "sessions"],
+        "authors": [
+            "Schimi <github@world-mg.de>"
+        ],
+        "keywords": [
+            "jellyfin",
+            "media server",
+            "media",
+            "video",
+            "remote",
+            "sessions"
+        ],
         "licenseInformation": {
             "type": "free",
             "license": "MIT"
@@ -71,14 +80,25 @@
         ],
         "globalDependencies": [
             {
-                "admin": ">=7.0.23"
+                "admin": ">=7.4.10"
             }
-        ]
+        ],
+        "messagebox": true
     },
     "native": {
-        "option1": true,
-        "option2": "42"
+        "url": "",
+        "apiKey": "",
+        "updateInterval": 5,
+        "coverHeight": 300,
+        "onlyRemoteControllable": false,
+        "requestTimeout": 10
     },
+    "encryptedNative": [
+        "apiKey"
+    ],
+    "protectedNative": [
+        "apiKey"
+    ],
     "objects": [],
     "instanceObjects": [
         {

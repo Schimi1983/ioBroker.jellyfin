@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/lib/ids.ts"],
+  "sourcesContent": ["import { createHash } from 'node:crypto';\n\n// @KI_HINWEIS: Android/Android-TV apps report short ids (16\u201340 chars) that can be used directly.\n//     Web clients report ~130-character Base64 ids (user agent + timestamp) which are unreadable and may contain\n//     characters that are forbidden in object ids \u2192 those are replaced by a 16-char SHA-1 hash.\n/**\n * Builds a stable ioBroker object id for a Jellyfin DeviceId.\n *\n * @param deviceId - DeviceId reported by Jellyfin\n * @returns id part that is safe to use below the adapter namespace\n */\nexport function deviceObjectId(deviceId: string): string {\n    if (/^[A-Za-z0-9_-]{1,40}$/.test(deviceId)) {\n        return deviceId;\n    }\n    return createHash('sha1').update(deviceId).digest('hex').slice(0, 16);\n}\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,yBAA2B;AAWpB,SAAS,eAAe,UAA0B;AACrD,MAAI,wBAAwB,KAAK,QAAQ,GAAG;AACxC,WAAO;AAAA,EACX;AACA,aAAO,+BAAW,MAAM,EAAE,OAAO,QAAQ,EAAE,OAAO,KAAK,EAAE,MAAM,GAAG,EAAE;AACxE;",
+  "names": []
+}
