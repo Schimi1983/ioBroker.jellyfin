@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "jellyfin",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "news": {
+      "0.1.1": {
+        "en": "Releases are now published by GitHub Actions (trusted publishing with provenance)\nRemoved the news entry of the unpublished version 0.0.1",
+        "de": "Releases werden jetzt von GitHub Actions veröffentlicht (Provenance)\nNewseintrag der unveröffentlichten Version 0.0.1 entfernt",
+        "ru": "Релизы теперь публикуются на GitHub Actions (надежная публикация с указанием происхождения)\nУдалена новость неопубликованной версии 0.0.1",
+        "pt": "As versões agora são publicadas pelo GitHub Actions (publicação confiável)\nRemovida a notícia da versão inédita 0.0.1",
+        "nl": "De releases worden nu gepubliceerd door GitHub Actions (betrouwbare publicatie met herkomst)\nHet nieuwsbericht van de ongepubliceerde versie 0.0.1 verwijderd",
+        "fr": "Les sorties sont désormais publiées par GitHub Actions (publication fiable avec provenance)\nSuppression de l'article de la version inédite 0.0.1",
+        "it": "Le release sono ora pubblicate da GitHub Actions (fonte attendibile)\nRimossa la notizia della versione inedita 0.0.1",
+        "es": "Los lanzamientos los publica ahora GitHub Actions (publicación confiable con procedencia)\nSe quitó la noticia de la versión 0.0.1 inédita",
+        "pl": "Wydania są teraz publikowane przez GitHub Actions (zaufane publikowanie z pochodzeniem)\nUsunięto wpis wiadomości nieopublikowanej wersji 0.0.1",
+        "uk": "Релізи тепер публікуються GitHub Actions (довірена публікація з походженням)\nВилучено запис новин неопублікованої версії 0.0.1",
+        "zh-cn": "版本现在由 GitHub Actions 发布（有来源的可信发布）\n删除了未发布版本 0.0.1 的新闻条目"
+      },
       "0.1.0": {
         "en": "Initial release: playback status, cover, remote control, start by title, messages and library scan for Jellyfin 12",
         "de": "Erste Version: Wiedergabestatus, Cover, Fernbedienung, Titel, Nachrichten und Lesescan für Jellyfin 12",
