@@ -51,7 +51,6 @@
             "type": "text",
             "label": "label_url",
             "help": "help_url",
-            "placeholder": "http://192.168.1.10:8096",
             "validator": "!!data.url && data.url.trim().length > 0",
             "validatorErrorText": "error_url",
             "validatorNoSaveOnError": true,
