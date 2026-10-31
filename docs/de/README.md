@@ -34,7 +34,7 @@ Jedes Gerät hat drei Ordner:
 |---|---|
 | `info` | Gerätename, App, Benutzer, ob es verbunden ist und ob es sich steuern lässt |
 | `media` | Was läuft: `state` (play / pause / stop), `title`, `series`, `season`, `episode`, `cover`, `elapsed`, `duration`, dazu `seek`, `volume`, `mute` |
-| `command` | Tasten: `play`, `pause`, `stop`, `next`, `previous`, `forward`, `rewind`, `volumeUp`, `volumeDown`, `toggleMute`, `playTitle` und `message` |
+| `command` | Tasten: `play`, `pause`, `playPause`, `stop`, `next`, `previous`, `forward`, `rewind`, `volumeUp`, `volumeDown`, `toggleMute`, `playTitle` und `message` |
 
 **Beispiele**
 
@@ -64,12 +64,15 @@ Unter `jellyfin.0.server` stehen Server-Version, ob ein Update oder Neustart ans
 - **Meldungen:** TV-Apps blenden Meldungen mit Anzeigedauer nach 2–3 Sekunden aus, egal welche Zeit eingestellt ist. Im Browser bleiben Meldungen ohne Anzeigedauer stehen, bis man sie schließt.
 - **Ein Gerät steht auf „nicht verbunden“:** Die App ist geschlossen oder das Gerät aus. Sobald die App wieder verbunden ist, aktualisiert sich alles von selbst.
 - Ein Befehl wird nur gesendet, wenn die App ihn gerade annimmt. Sonst steht ein kurzer Hinweis im Log.
+- **Alte Geräte** werden nie automatisch gelöscht. So bleiben deine Skripte und VIS-Verknüpfungen erhalten, wenn ein Gerät länger aus ist. Ein Gerät, das du nicht mehr nutzt, kannst du im Reiter **Objekte** löschen.
+- **Option „Nur steuerbare Geräte anzeigen“:** Neue Geräte werden nur angelegt, wenn sie Befehle annehmen. Bereits vorhandene Geräte bleiben – lösche sie im Reiter **Objekte**, wenn du sie nicht brauchst.
 
 ## Fragen und Probleme
 
 - **„The Jellyfin server rejected the API key“** – Schlüssel prüfen oder im Jellyfin-Dashboard einen neuen anlegen.
 - **„Jellyfin was not found at this address“** – Adresse und Port prüfen, bei einem Reverse Proxy auch den Pfad (z. B. `https://example.com/jellyfin`).
 - **„Cannot reach the Jellyfin server“** – Läuft der Server und ist er vom ioBroker-Rechner aus erreichbar?
+- **„Jellyfin … is not supported“** – Der Adapter braucht Jellyfin ab Version 12, bitte den Server aktualisieren.
 - Etwas anderes? Bitte ein [Issue](https://github.com/Schimi1983/ioBroker.jellyfin/issues) mit Log (Loglevel *debug*) anlegen.
 
 Technische Details (alle Datenpunkte, Skript-Befehle, Experteneinstellungen) stehen im Abschnitt *For advanced users* der [englischen README](../../README.md).

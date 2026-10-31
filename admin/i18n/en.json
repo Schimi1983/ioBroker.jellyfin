@@ -11,7 +11,7 @@
     "error_apiKey": "Please enter the API key",
     "header_options": "Options",
     "label_onlyRemote": "Only show devices that can be controlled",
-    "help_onlyRemote": "Hides devices that never accept commands (e.g. apps without remote control support).",
+    "help_onlyRemote": "New devices are only added if they accept commands. Existing devices are kept.",
     "label_updateInterval": "Update interval",
     "help_updateInterval": "How often the server sends the playback status (2–60 s)",
     "label_coverHeight": "Cover height",

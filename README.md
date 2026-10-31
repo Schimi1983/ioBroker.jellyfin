@@ -43,7 +43,7 @@ Each device has three folders:
 |---|---|
 | `info` | Name of the device, app, user, whether it is connected and whether it can be controlled |
 | `media` | What is playing: `state` (play / pause / stop), `title`, `series`, `season`, `episode`, `cover`, `elapsed`, `duration`, and `seek`, `volume`, `mute` |
-| `command` | Buttons: `play`, `pause`, `stop`, `next`, `previous`, `forward`, `rewind`, `volumeUp`, `volumeDown`, `toggleMute`, `playTitle` and `message` |
+| `command` | Buttons: `play`, `pause`, `playPause`, `stop`, `next`, `previous`, `forward`, `rewind`, `volumeUp`, `volumeDown`, `toggleMute`, `playTitle` and `message` |
 
 **Examples**
 
@@ -73,12 +73,15 @@ Below `jellyfin.0.server` you see the server version, whether an update or resta
 - **Messages:** TV apps hide messages with a display time after 2–3 seconds, no matter which time is set. In the browser, messages without a display time stay until they are closed.
 - **A device shows "not connected":** the app is closed or the device is off. As soon as the app connects again, everything updates automatically.
 - A command is only sent if the app accepts it at that moment. Otherwise you find a short note in the log.
+- **Old devices** are never deleted automatically, so you keep your scripts and VIS links when a device is off for a while. You can delete a device you no longer use in the **Objects** tab.
+- **Option "Only show devices that can be controlled":** new devices are only added if they accept commands. Devices that already exist stay – delete them in the **Objects** tab if you do not want them.
 
 ## Questions and problems
 
 - **"The Jellyfin server rejected the API key"** – check the key, or create a new one in the Jellyfin dashboard.
 - **"Jellyfin was not found at this address"** – check the address, port and – if Jellyfin runs behind a reverse proxy – the path (e.g. `https://example.com/jellyfin`).
 - **"Cannot reach the Jellyfin server"** – is the server running and reachable from the ioBroker computer?
+- **"Jellyfin … is not supported"** – the adapter needs Jellyfin 12 or newer, please update the server.
 - Something else? Please open an [issue](https://github.com/Schimi1983/ioBroker.jellyfin/issues) and add the log (log level *debug*).
 
 <details>
@@ -99,9 +102,9 @@ Below `jellyfin.0.server` you see the server version, whether an update or resta
 | `media.cover` | string | read | cover URL (no login needed) |
 | `media.duration` / `media.elapsed` | number (s) | read | length and position |
 | `media.seek` | number (%) | read/write | position in percent, write to jump |
-| `media.volume` | number (%) | read/write | volume |
-| `media.mute` | boolean | read/write | mute |
-| `media.repeat` | string | read/write | `RepeatNone`, `RepeatAll`, `RepeatOne` |
+| `media.volume` | number (%) | read/write | volume (only filled if the app reports its volume) |
+| `media.mute` | boolean | read/write | mute (only filled if the app reports its volume) |
+| `media.repeat` | string | read/write | `RepeatNone`, `RepeatAll`, `RepeatOne` (only filled if the app supports it) |
 | `media.itemId` | string | read | Jellyfin id of the current item |
 | `command.*` | boolean | write | buttons |
 | `command.playTitle` | string | read/write | title (search, exact match preferred; a series starts with its first episode) or Jellyfin item id |

@@ -7,7 +7,7 @@
     "header_support": "Wspieraj rozwój",
     "help_apiKey": "Panel Jellyfin → Klucze API → +",
     "help_coverHeight": "Rozmiar obrazów okładek w pikselach, 0 = rozmiar oryginalny",
-    "help_onlyRemote": "Ukrywa urządzenia, które nigdy nie akceptują poleceń (np. aplikacje bez obsługi pilota).",
+    "help_onlyRemote": "Nowe urządzenia są dodawane tylko wtedy, gdy akceptują polecenia. Istniejące urządzenia zostają zachowane.",
     "help_requestTimeout": "Maksymalny czas oczekiwania na odpowiedź z serwera",
     "help_updateInterval": "Jak często serwer wysyła stan odtwarzania (2–60 s)",
     "help_url": "Adres po otwarciu w przeglądarce, m.in. portu, np. http://192.168.1.10:8096",

@@ -7,7 +7,7 @@
     "header_support": "Apoyar el desarrollo",
     "help_apiKey": "Panel de Jellyfin → Claves API → +",
     "help_coverHeight": "Tamaño de las imágenes de portada en píxeles, 0 = tamaño original",
-    "help_onlyRemote": "Oculta dispositivos que nunca aceptan comandos (por ejemplo, aplicaciones sin soporte de control remoto).",
+    "help_onlyRemote": "Solo se agregan nuevos dispositivos si aceptan comandos. Se mantienen los dispositivos existentes.",
     "help_requestTimeout": "Tiempo máximo de espera para una respuesta del servidor",
     "help_updateInterval": "Con qué frecuencia el servidor envía el estado de reproducción (2–60 s)",
     "help_url": "Dirección tal como la abre en el navegador, incl. puerto, p.e. http://192.168.1.10:8096",
