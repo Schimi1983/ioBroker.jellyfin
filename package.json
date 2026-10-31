@@ -1,6 +1,6 @@
 {
   "name": "iobroker.jellyfin",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Monitor and control Jellyfin media server sessions (playback, remote control, messages)",
   "author": {
     "name": "Schimi",

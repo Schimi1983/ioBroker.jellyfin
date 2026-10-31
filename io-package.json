@@ -1,126 +1,139 @@
 {
-    "common": {
-        "name": "jellyfin",
-        "version": "0.0.1",
-        "news": {
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "uk": "Початкова версія",
-                "zh-cn": "首次出版"
-            }
-        },
-        "titleLang": {
-            "en": "Jellyfin",
-            "de": "Jellyfin",
-            "ru": "Jellyfin",
-            "pt": "Jellyfin",
-            "nl": "Jellyfin",
-            "fr": "Jellyfin",
-            "it": "Jellyfin",
-            "es": "Jellyfin",
-            "pl": "Jellyfin",
-            "uk": "Jellyfin",
-            "zh-cn": "Jellyfin"
-        },
-        "desc": {
-            "en": "Monitor and control Jellyfin media server sessions (playback, remote control, messages)",
-            "de": "Überwachen und steuern Sie Jellyfin-Medienserversitzungen (Wiedergabe, Fernsteuerung, Nachrichten).",
-            "ru": "Мониторинг и управление сеансами медиасервера Jellyfin (воспроизведение, удаленное управление, сообщения)",
-            "pt": "Monitore e controle sessões do servidor de mídia Jellyfin (reprodução, controle remoto, mensagens)",
-            "nl": "Bewaak en beheer Jellyfin-mediaserversessies (afspelen, afstandsbediening, berichten)",
-            "fr": "Surveiller et contrôler les sessions du serveur multimédia Jellyfin (lecture, contrôle à distance, messages)",
-            "it": "Monitorare e controllare le sessioni del server multimediale Jellyfin (riproduzione, controllo remoto, messaggi)",
-            "es": "Monitorear y controlar las sesiones del servidor de medios Jellyfin (reproducción, control remoto, mensajes)",
-            "pl": "Monitoruj i kontroluj sesje serwera multimedialnego Jellyfin (odtwarzanie, zdalne sterowanie, wiadomości)",
-            "uk": "Відстежуйте та контролюйте сеанси медіа-сервера Jellyfin (відтворення, дистанційне керування, повідомлення)",
-            "zh-cn": "监视和控制 Jellyfin 媒体服务器会话（播放、远程控制、消息）"
-        },
-        "authors": [
-            "Schimi <github@world-mg.de>"
-        ],
-        "keywords": [
-            "jellyfin",
-            "media server",
-            "media",
-            "video",
-            "remote",
-            "sessions"
-        ],
-        "licenseInformation": {
-            "type": "free",
-            "license": "MIT"
-        },
-        "platform": "Javascript/Node.js",
-        "icon": "jellyfin.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/Schimi1983/ioBroker.jellyfin/main/admin/jellyfin.png",
-        "readme": "https://github.com/Schimi1983/ioBroker.jellyfin/blob/main/README.md",
-        "loglevel": "info",
-        "tier": 3,
-        "mode": "daemon",
-        "type": "multimedia",
-        "compact": true,
-        "connectionType": "local",
-        "dataSource": "push",
-        "adminUI": {
-            "config": "json"
-        },
-        "dependencies": [
-            {
-                "js-controller": ">=6.0.11"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "admin": ">=7.6.20"
-            }
-        ],
-        "messagebox": true
+  "common": {
+    "name": "jellyfin",
+    "version": "0.1.0",
+    "news": {
+      "0.1.0": {
+        "en": "Initial release: playback status, cover, remote control, start by title, messages and library scan for Jellyfin 12",
+        "de": "Erste Version: Wiedergabestatus, Cover, Fernbedienung, Titel, Nachrichten und Lesescan für Jellyfin 12",
+        "ru": "Первоначальная версия: статус воспроизведения, обложка, пульт дистанционного управления, запуск по заголовку, сообщения и сканирование библиотеки для Jellyfin 12",
+        "pt": "Versão inicial: status de reprodução, capa, controle remoto, título, mensagens e leitura do Jellyfin 12",
+        "nl": "Eerste release: afspeelstatus, cover, afstandsbediening, begin op titel, berichten en bibliotheekscan voor Jellyfin 12",
+        "fr": "Sortie initiale : état de lecture, pochette, télécommande, démarrage par titre, messages et scan de la bibliothèque pour Jellyfin 12",
+        "it": "Versione iniziale: stato di riproduzione, cover, telecomando, titolo, messaggi e scansione di Jellyfin 12",
+        "es": "Versión inicial: estado de reproducción, portada, control remoto, inicio por título, mensajes y escaneo de biblioteca para Jellyfin 12",
+        "pl": "Pierwsze wydanie: stan odtwarzania, okładka, pilot zdalnego sterowania, początek od tytułu, wiadomości i skanowanie biblioteki pod kątem Jellyfin 12",
+        "uk": "Початковий випуск: статус відтворення, обкладинка, пульт дистанційного керування, початок за назвою, повідомлення та сканування бібліотеки для Jellyfin 12",
+        "zh-cn": "首次发布：Jellyfin 12 的播放状态、封面、遥控器、标题、消息和库扫描"
+      },
+      "0.0.1": {
+        "en": "initial release",
+        "de": "Erstveröffentlichung",
+        "ru": "Начальная версия",
+        "pt": "lançamento inicial",
+        "nl": "Eerste uitgave",
+        "fr": "Première version",
+        "it": "Versione iniziale",
+        "es": "Versión inicial",
+        "pl": "Pierwsze wydanie",
+        "uk": "Початкова версія",
+        "zh-cn": "首次出版"
+      }
     },
-    "native": {
-        "url": "",
-        "apiKey": "",
-        "updateInterval": 5,
-        "coverHeight": 300,
-        "onlyRemoteControllable": false,
-        "requestTimeout": 10
+    "titleLang": {
+      "en": "Jellyfin",
+      "de": "Jellyfin",
+      "ru": "Jellyfin",
+      "pt": "Jellyfin",
+      "nl": "Jellyfin",
+      "fr": "Jellyfin",
+      "it": "Jellyfin",
+      "es": "Jellyfin",
+      "pl": "Jellyfin",
+      "uk": "Jellyfin",
+      "zh-cn": "Jellyfin"
     },
-    "encryptedNative": [
-        "apiKey"
+    "desc": {
+      "en": "Monitor and control Jellyfin media server sessions (playback, remote control, messages)",
+      "de": "Überwachen und steuern Sie Jellyfin-Medienserversitzungen (Wiedergabe, Fernsteuerung, Nachrichten).",
+      "ru": "Мониторинг и управление сеансами медиасервера Jellyfin (воспроизведение, удаленное управление, сообщения)",
+      "pt": "Monitore e controle sessões do servidor de mídia Jellyfin (reprodução, controle remoto, mensagens)",
+      "nl": "Bewaak en beheer Jellyfin-mediaserversessies (afspelen, afstandsbediening, berichten)",
+      "fr": "Surveiller et contrôler les sessions du serveur multimédia Jellyfin (lecture, contrôle à distance, messages)",
+      "it": "Monitorare e controllare le sessioni del server multimediale Jellyfin (riproduzione, controllo remoto, messaggi)",
+      "es": "Monitorear y controlar las sesiones del servidor de medios Jellyfin (reproducción, control remoto, mensajes)",
+      "pl": "Monitoruj i kontroluj sesje serwera multimedialnego Jellyfin (odtwarzanie, zdalne sterowanie, wiadomości)",
+      "uk": "Відстежуйте та контролюйте сеанси медіа-сервера Jellyfin (відтворення, дистанційне керування, повідомлення)",
+      "zh-cn": "监视和控制 Jellyfin 媒体服务器会话（播放、远程控制、消息）"
+    },
+    "authors": [
+      "Schimi <github@world-mg.de>"
     ],
-    "protectedNative": [
-        "apiKey"
+    "keywords": [
+      "jellyfin",
+      "media server",
+      "media",
+      "video",
+      "remote",
+      "sessions"
     ],
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "name": "Information"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.connection",
-            "type": "state",
-            "common": {
-                "role": "indicator.connected",
-                "name": "Device or service connected",
-                "type": "boolean",
-                "read": true,
-                "write": false,
-                "def": false
-            },
-            "native": {}
-        }
-    ]
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
+    "platform": "Javascript/Node.js",
+    "icon": "jellyfin.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/Schimi1983/ioBroker.jellyfin/main/admin/jellyfin.png",
+    "readme": "https://github.com/Schimi1983/ioBroker.jellyfin/blob/main/README.md",
+    "loglevel": "info",
+    "tier": 3,
+    "mode": "daemon",
+    "type": "multimedia",
+    "compact": true,
+    "connectionType": "local",
+    "dataSource": "push",
+    "adminUI": {
+      "config": "json"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=6.0.11"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=7.6.20"
+      }
+    ],
+    "messagebox": true
+  },
+  "native": {
+    "url": "",
+    "apiKey": "",
+    "updateInterval": 5,
+    "coverHeight": 300,
+    "onlyRemoteControllable": false,
+    "requestTimeout": 10
+  },
+  "encryptedNative": [
+    "apiKey"
+  ],
+  "protectedNative": [
+    "apiKey"
+  ],
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "name": "Information"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "role": "indicator.connected",
+        "name": "Device or service connected",
+        "type": "boolean",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
 }
