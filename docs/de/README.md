@@ -7,7 +7,7 @@ Sieh in ioBroker, was auf deinen [Jellyfin](https://jellyfin.org)-Apps läuft, u
 ## Was du damit machen kannst
 
 - Auf jeder Jellyfin-App (Fernseher, Handy, Browser) sehen, was läuft: Titel, Serie, Folge, Cover, Position
-- Einen Film, eine Folge oder ein Lied über den Titel starten
+- Einen Film, eine Serie, eine Folge, ein Album oder ein Lied über den Titel starten
 - Abspielen, Pause, Stopp, vor- und zurückspulen, an eine Stelle springen
 - Lautstärke ändern oder stumm schalten
 - Eine Meldung auf dem Fernseher anzeigen (z. B. „Es hat geklingelt“)

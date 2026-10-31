@@ -16,7 +16,7 @@ See what is playing on your [Jellyfin](https://jellyfin.org) apps and control th
 ## What you can do
 
 - See on every Jellyfin app (TV, phone, browser) what is playing: title, series, episode, cover, position
-- Start a film, an episode or a song by its title
+- Start a film, a series, an episode, an album or a song by its title
 - Play, pause, stop, skip forward and back, jump to a position
 - Change the volume or mute
 - Show a message on the TV screen (e.g. "Someone is at the door")
@@ -103,7 +103,7 @@ Below `jellyfin.0.server` you see the server version, whether an update or resta
 | `media.repeat` | string | read/write | `RepeatNone`, `RepeatAll`, `RepeatOne` |
 | `media.itemId` | string | read | Jellyfin id of the current item |
 | `command.*` | boolean | write | buttons |
-| `command.playTitle` | string | read/write | title (search, exact match preferred) or Jellyfin item id |
+| `command.playTitle` | string | read/write | title (search, exact match preferred; a series starts with its first episode) or Jellyfin item id |
 | `command.message` | string | read/write | text or JSON `{"text":"…","header":"…","timeoutMs":5000}` |
 | `command.generalCommand` | string | read/write | any Jellyfin command, e.g. `GoHome` or `{"Name":"SetVolume","Arguments":{"Volume":"30"}}` |
 

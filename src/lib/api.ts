@@ -197,7 +197,8 @@ export class JellyfinApi {
     }
 
     /**
-     * Searches a playable item by name (movies, episodes, music, videos).
+     * Searches a playable item by name (movies, series, episodes, music, videos).
+     * A series is played by Jellyfin from its first episode.
      *
      * @param term - search text
      * @param userId - user of the session (library permissions of this user apply)
@@ -206,7 +207,7 @@ export class JellyfinApi {
     public async findItem(term: string, userId?: string): Promise<ItemInfo | undefined> {
         const q = new URLSearchParams({
             searchTerm: term,
-            includeItemTypes: 'Movie,Episode,Audio,MusicVideo,Video',
+            includeItemTypes: 'Movie,Series,Episode,Audio,MusicAlbum,MusicVideo,Video',
             recursive: 'true',
             limit: '10',
         });

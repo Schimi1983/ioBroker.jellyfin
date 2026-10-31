@@ -181,7 +181,8 @@ class JellyfinApi {
     await this.request("POST", `/Sessions/${encodeURIComponent(sessionId)}/Message`, body);
   }
   /**
-   * Searches a playable item by name (movies, episodes, music, videos).
+   * Searches a playable item by name (movies, series, episodes, music, videos).
+   * A series is played by Jellyfin from its first episode.
    *
    * @param term - search text
    * @param userId - user of the session (library permissions of this user apply)
@@ -191,7 +192,7 @@ class JellyfinApi {
     var _a, _b;
     const q = new URLSearchParams({
       searchTerm: term,
-      includeItemTypes: "Movie,Episode,Audio,MusicVideo,Video",
+      includeItemTypes: "Movie,Series,Episode,Audio,MusicAlbum,MusicVideo,Video",
       recursive: "true",
       limit: "10"
     });
