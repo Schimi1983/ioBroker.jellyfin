@@ -23,7 +23,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var utils = __toESM(require("@iobroker/adapter-core"));
 var import_api = require("./lib/api");
-var import_ids = require("./lib/ids");
+var import_devices = require("./lib/devices");
 var import_objects = require("./lib/objects");
 var import_commands = require("./lib/commands");
 var import_session = require("./lib/session");
@@ -344,19 +344,18 @@ class Jellyfin extends utils.Adapter {
    */
   async handleSessions(list) {
     var _a, _b;
+    const own = list.filter(
+      // @KI_HINWEIS: sessions of ioBroker itself (this and other jellyfin instances, test scripts) are no devices.
+      //     Jellyfin 12 registers our own WebSocket connection with DeviceId = server id ("Jellyfin Server",
+      //     client = name of the API key) – it is filtered out as well.
+      (s) => !!(s == null ? void 0 : s.DeviceId) && !!s.Id && !s.DeviceId.startsWith(OWN_DEVICE_PREFIX) && !(this.serverId !== "" && s.DeviceId === this.serverId)
+    );
     const current = /* @__PURE__ */ new Map();
-    for (const s of list) {
-      if (!(s == null ? void 0 : s.DeviceId) || !s.Id || s.DeviceId.startsWith(OWN_DEVICE_PREFIX) || this.serverId !== "" && s.DeviceId === this.serverId) {
+    for (const dev of (0, import_devices.groupSessions)(own, Date.now()).values()) {
+      if (this.onlyRemote && !dev.members.some((m) => m.SupportsRemoteControl) && !this.knownDevices.has(dev.id)) {
         continue;
       }
-      const id = (0, import_ids.deviceObjectId)(s.DeviceId);
-      if (this.onlyRemote && s.SupportsRemoteControl !== true && !this.knownDevices.has(id)) {
-        continue;
-      }
-      const prev = current.get(id);
-      if (!prev || rank(s) > rank(prev)) {
-        current.set(id, s);
-      }
+      current.set(dev.id, dev.view);
     }
     const opts = { baseUrl: (_b = (_a = this.api) == null ? void 0 : _a.baseUrl) != null ? _b : "", coverHeight: this.coverHeight };
     let playing = 0;
@@ -386,7 +385,7 @@ class Jellyfin extends utils.Adapter {
    * @param s - session
    */
   async prepareDevice(id, s) {
-    const name = [s.DeviceName, s.Client].filter(Boolean).join(" \u2013 ") || s.DeviceId;
+    const name = [(0, import_devices.displayName)(s), s.Client].filter(Boolean).join(" \u2013 ") || s.DeviceId;
     if (this.preparedDevices.get(id) === name) {
       return;
     }
@@ -501,23 +500,23 @@ class Jellyfin extends utils.Adapter {
       case "media.seek": {
         const pct = Number(state.val);
         const ticks = (_a = s == null ? void 0 : s.NowPlayingItem) == null ? void 0 : _a.RunTimeTicks;
+        let ok = false;
         if (!Number.isFinite(pct) || !ticks) {
           this.log.warn(
             `${this.deviceName(device, s)}: cannot jump, nothing with a known duration is playing`
           );
-          return;
-        }
-        if (this.allowed(device, s, "Seek", { type: "playstate" })) {
+        } else if (this.allowed(device, s, "Seek", { type: "playstate" })) {
           const target = clamp(pct, 0, 100) / 100 * ticks;
-          await this.run(id, "Seek", () => api.playstate(s.Id, "Seek", target), void 0);
-          this.valueCache.delete(id);
+          ok = await this.run(id, "Seek", () => api.playstate(s.Id, "Seek", target), void 0);
         }
+        await this.afterValueCommand(id, ok);
         return;
       }
       case "media.volume": {
         const vol = Math.round(clamp(Number(state.val), 0, 100));
+        let ok = false;
         if (this.allowed(device, s, "SetVolume", { type: "general", name: "SetVolume" })) {
-          await this.runAudio(
+          ok = await this.runAudio(
             id,
             s,
             "SetVolume",
@@ -525,26 +524,32 @@ class Jellyfin extends utils.Adapter {
             () => api.generalCommand(s.Id, "SetVolume", { Volume: String(vol) })
           );
         }
+        if (!ok) {
+          await this.afterValueCommand(id, false);
+        }
         return;
       }
       case "media.mute": {
         const mute = state.val === true || state.val === "true" || state.val === 1;
         const cmd = mute ? "Mute" : "Unmute";
+        let ok = false;
         if (this.allowed(device, s, cmd, { type: "general", name: cmd })) {
-          await this.runAudio(id, s, cmd, mute, () => api.generalCommand(s.Id, cmd));
+          ok = await this.runAudio(id, s, cmd, mute, () => api.generalCommand(s.Id, cmd));
+        }
+        if (!ok) {
+          await this.afterValueCommand(id, false);
         }
         return;
       }
       case "media.repeat": {
         const mode = String(state.val);
+        let ok = false;
         if (!(mode in import_objects.REPEAT_STATES)) {
           this.log.warn(`Invalid repeat mode "${mode}", allowed: ${Object.keys(import_objects.REPEAT_STATES).join(", ")}`);
-          return;
+        } else if (this.allowed(device, s, "SetRepeatMode", { type: "general", name: "SetRepeatMode" })) {
+          ok = await this.run(id, "SetRepeatMode", () => api.setRepeatMode(s.Id, mode), void 0);
         }
-        if (this.allowed(device, s, "SetRepeatMode", { type: "general", name: "SetRepeatMode" })) {
-          await this.run(id, "SetRepeatMode", () => api.setRepeatMode(s.Id, mode), void 0);
-          this.valueCache.delete(id);
-        }
+        await this.afterValueCommand(id, ok);
         return;
       }
       case "command.playTitle": {
@@ -652,16 +657,34 @@ class Jellyfin extends utils.Adapter {
    * @param label - command name for the log
    * @param value - commanded value
    * @param fn - request
+   * @returns true if the command was sent
    */
   async runAudio(id, s, label, value, fn) {
     const reported = (0, import_session.reportsAudio)(s);
-    if (await this.run(id, label, fn, reported ? void 0 : value)) {
-      if (reported) {
-        this.valueCache.delete(id);
-      } else {
-        this.valueCache.set(id, value);
-      }
+    if (!await this.run(id, label, fn, reported ? void 0 : value)) {
+      return false;
     }
+    if (reported) {
+      this.valueCache.delete(id);
+    } else {
+      this.valueCache.set(id, value);
+    }
+    return true;
+  }
+  /**
+   * After a command on a value state: on success the next session report writes the real value (cache cleared),
+   * otherwise the state jumps back to the last acknowledged value instead of keeping the rejected one (ack=false).
+   *
+   * @param id - state id relative to the namespace
+   * @param ok - command was sent successfully
+   */
+  async afterValueCommand(id, ok) {
+    if (ok) {
+      this.valueCache.delete(id);
+      return;
+    }
+    const last = this.valueCache.get(id);
+    await this.setState(id, last === void 0 ? null : last, true);
   }
   /**
    * Readable device name for log messages.
@@ -747,9 +770,6 @@ function itemLabel(i) {
     return `${i.SeriesName} ${se} \u2013 ${(_c = i.Name) != null ? _c : ""}`;
   }
   return i.ProductionYear ? `${(_d = i.Name) != null ? _d : i.Id} (${i.ProductionYear})` : (_e = i.Name) != null ? _e : i.Id;
-}
-function rank(s) {
-  return (s.NowPlayingItem ? 2 : 0) + (s.SupportsRemoteControl ? 1 : 0);
 }
 if (require.main !== module) {
   module.exports = (options) => new Jellyfin(options);

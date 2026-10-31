@@ -7,7 +7,7 @@
     "header_support": "Entwicklung unterstützen",
     "help_apiKey": "Jellyfin-Dashboard → API-Schlüssel → +",
     "help_coverHeight": "Größe der Cover-Bilder in Pixeln, 0 = Originalgröße",
-    "help_onlyRemote": "Viele Apps melden sich doppelt beim Server an (App und Player). Mit dieser Option wird nur der Teil angelegt, der Befehle annimmt.",
+    "help_onlyRemote": "Blendet Geräte aus, die nie Befehle annehmen (z. B. Apps ohne Fernsteuerung).",
     "help_requestTimeout": "Maximale Wartezeit auf eine Antwort des Servers",
     "help_updateInterval": "Wie oft der Server den Wiedergabestatus sendet (2–60 s)",
     "help_url": "Adresse wie im Browser, mit Port, z. B. http://192.168.1.10:8096",

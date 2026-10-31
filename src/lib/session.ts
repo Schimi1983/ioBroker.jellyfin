@@ -74,7 +74,7 @@ export function sessionValues(s: SessionInfo, opts: MappingOptions): Record<stri
     const item = s.NowPlayingItem ?? undefined;
     const ps = s.PlayState ?? {};
 
-    v['info.name'] = s.DeviceName ?? '';
+    v['info.name'] = (s.DeviceName ?? '').replace(/\+/g, ' ').trim();
     v['info.client'] = s.Client ?? '';
     v['info.version'] = s.ApplicationVersion ?? '';
     v['info.user'] = s.UserName ?? '';

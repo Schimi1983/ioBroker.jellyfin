@@ -58,12 +58,18 @@ Below `jellyfin.0.server` you see the server version, whether an update or resta
 
 ## Good to know
 
-- **Two entries for one device:** many Jellyfin apps register twice with the server (the app and its player). Both appear as devices. If only the controllable one should be created, switch on *Only show devices that can be controlled* in the settings.
-- **Jellyfin app on phones:** remote control only works if the **web player** is selected in the app settings. With the integrated player the app does not accept commands.
-- **Jellyfin app on TV (Fire TV, NVIDIA SHIELD, Android TV):**
-  - Volume and mute work, but the app does not report the volume back – the values in ioBroker show the last command.
-  - Messages with a display time disappear after 2–3 seconds, no matter which time is set.
-  - "Repeat" is not supported.
+- **One device, two connections:** the Jellyfin apps for phones, tablets and TVs register twice with the server (the app and its player). The adapter combines both into one device: you see what the player shows and the commands go to the app.
+- **A device shows "cannot be controlled"** (`info.remoteControl` = false) although the app is open: restart the app. If that does not help, log out in the app and log in again.
+- **Volume** works differently on every device:
+
+| Device | Volume value | Louder / quieter | Mute |
+|---|---|---|---|
+| Browser | ✔ | ✔ | ✔ |
+| TV app (Fire TV, NVIDIA SHIELD, Android TV) | ✘ only a small step | ✔ | ✔ (not when the sound goes to an AV receiver) |
+| Phone / tablet app | ✘ (system volume) | ✘ | ✔ |
+
+- **Phone app:** remote control only works with the **web player** (app settings). A film started from ioBroker may wait until you tap play once on the phone.
+- **Messages:** TV apps hide messages with a display time after 2–3 seconds, no matter which time is set. In the browser, messages without a display time stay until they are closed.
 - **A device shows "not connected":** the app is closed or the device is off. As soon as the app connects again, everything updates automatically.
 - A command is only sent if the app accepts it at that moment. Otherwise you find a short note in the log.
 
@@ -101,7 +107,7 @@ Below `jellyfin.0.server` you see the server version, whether an update or resta
 | `command.message` | string | read/write | text or JSON `{"text":"…","header":"…","timeoutMs":5000}` |
 | `command.generalCommand` | string | read/write | any Jellyfin command, e.g. `GoHome` or `{"Name":"SetVolume","Arguments":{"Volume":"30"}}` |
 
-Device ids: apps that report a short id use it directly; web browsers report very long ids, they are shortened to a 16-character hash.
+Device ids: browsers use their own (shortened) id; apps are identified by app, device name and user (16-character hash), so both connections of an app end up in the same device.
 
 ### Message via script
 
@@ -141,7 +147,7 @@ Jellyfin is a free software project. This adapter is not affiliated with or endo
 -->
 ### **WORK IN PROGRESS**
 
-- (Schimi) Initial release: playback status, cover, remote control, messages and library scan for Jellyfin 12
+- (Schimi) Initial release: playback status, cover, remote control, start by title, messages and library scan for Jellyfin 12
 
 ## License
 

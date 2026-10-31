@@ -7,7 +7,7 @@
     "header_support": "Ondersteun de ontwikkeling",
     "help_apiKey": "Jellyfin-dashboard → API-sleutels → +",
     "help_coverHeight": "Grootte van de omslagafbeeldingen in pixels, 0 = originele grootte",
-    "help_onlyRemote": "Veel apps registreren zich tweemaal bij de server (app en speler). Met deze optie wordt alleen het gedeelte gemaakt dat opdrachten accepteert.",
+    "help_onlyRemote": "Verbergt apparaten die nooit opdrachten accepteren (bijvoorbeeld apps zonder ondersteuning voor afstandsbediening).",
     "help_requestTimeout": "Maximale wachttijd voor antwoord van de server",
     "help_updateInterval": "Hoe vaak de server de afspeelstatus verzendt (2-60 s)",
     "help_url": "Adres zoals u het in de browser opent, incl. haven, bijv. http://192.168.1.10:8096",

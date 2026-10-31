@@ -66,7 +66,7 @@ function sessionValues(s, opts) {
   const v = {};
   const item = (_a = s.NowPlayingItem) != null ? _a : void 0;
   const ps = (_b = s.PlayState) != null ? _b : {};
-  v["info.name"] = (_c = s.DeviceName) != null ? _c : "";
+  v["info.name"] = ((_c = s.DeviceName) != null ? _c : "").replace(/\+/g, " ").trim();
   v["info.client"] = (_d = s.Client) != null ? _d : "";
   v["info.version"] = (_e = s.ApplicationVersion) != null ? _e : "";
   v["info.user"] = (_f = s.UserName) != null ? _f : "";

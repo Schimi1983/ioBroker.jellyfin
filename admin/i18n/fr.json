@@ -7,7 +7,7 @@
     "header_support": "Accompagner le développement",
     "help_apiKey": "Tableau de bord Jellyfin → Clés API → +",
     "help_coverHeight": "Taille des images de couverture en pixels, 0 = taille originale",
-    "help_onlyRemote": "De nombreuses applications s'enregistrent deux fois auprès du serveur (application et lecteur). Avec cette option, seule la partie qui accepte les commandes est créée.",
+    "help_onlyRemote": "Masque les appareils qui n'acceptent jamais de commandes (par exemple, les applications sans prise en charge de la télécommande).",
     "help_requestTimeout": "Temps d'attente maximum pour une réponse du serveur",
     "help_updateInterval": "À quelle fréquence le serveur envoie l'état de lecture (2 à 60 s)",
     "help_url": "Adresse telle que vous l'ouvrez dans le navigateur, incl. port, par ex. http://192.168.1.10:8096",

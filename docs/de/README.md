@@ -49,12 +49,18 @@ Unter `jellyfin.0.server` stehen Server-Version, ob ein Update oder Neustart ans
 
 ## Gut zu wissen
 
-- **Ein Gerät taucht doppelt auf:** Viele Jellyfin-Apps melden sich zweimal beim Server an (App und Player). Beide erscheinen als Gerät. Soll nur der steuerbare Teil angelegt werden, in den Einstellungen *Nur steuerbare Geräte anzeigen* einschalten.
-- **Jellyfin-App auf dem Handy:** Fernsteuern geht nur, wenn in den App-Einstellungen der **Web-Player** gewählt ist. Mit dem integrierten Player nimmt die App keine Befehle an.
-- **Jellyfin-App auf dem Fernseher (Fire TV, NVIDIA SHIELD, Android TV):**
-  - Lautstärke und Stumm funktionieren, die App meldet die Lautstärke aber nicht zurück – in ioBroker steht der zuletzt gesendete Wert.
-  - Meldungen mit Anzeigedauer verschwinden nach 2–3 Sekunden, egal welche Zeit eingestellt ist.
-  - „Wiederholen“ wird nicht unterstützt.
+- **Ein Gerät, zwei Verbindungen:** Die Jellyfin-Apps für Handy, Tablet und Fernseher melden sich zweimal beim Server an (App und Player). Der Adapter fasst beides zu einem Gerät zusammen: Du siehst, was der Player zeigt, und die Befehle gehen an die App.
+- **Ein Gerät steht auf „nicht steuerbar“** (`info.remoteControl` = false), obwohl die App offen ist: App neu starten. Hilft das nicht, in der App ab- und wieder anmelden.
+- **Lautstärke** funktioniert je nach Gerät unterschiedlich:
+
+| Gerät | Lautstärke-Wert | Lauter / leiser | Stumm |
+|---|---|---|---|
+| Browser | ✔ | ✔ | ✔ |
+| TV-App (Fire TV, NVIDIA SHIELD, Android TV) | ✘ nur ein kleiner Schritt | ✔ | ✔ (nicht, wenn der Ton über einen AV-Receiver läuft) |
+| Handy-/Tablet-App | ✘ (Systemlautstärke) | ✘ | ✔ |
+
+- **Handy-App:** Fernsteuern geht nur mit dem **Web-Player** (App-Einstellungen). Ein per ioBroker gestarteter Film wartet eventuell, bis man auf dem Handy einmal auf Play tippt.
+- **Meldungen:** TV-Apps blenden Meldungen mit Anzeigedauer nach 2–3 Sekunden aus, egal welche Zeit eingestellt ist. Im Browser bleiben Meldungen ohne Anzeigedauer stehen, bis man sie schließt.
 - **Ein Gerät steht auf „nicht verbunden“:** Die App ist geschlossen oder das Gerät aus. Sobald die App wieder verbunden ist, aktualisiert sich alles von selbst.
 - Ein Befehl wird nur gesendet, wenn die App ihn gerade annimmt. Sonst steht ein kurzer Hinweis im Log.
 

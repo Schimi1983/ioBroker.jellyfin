@@ -7,7 +7,7 @@
     "header_support": "支持发展",
     "help_apiKey": "Jellyfin 仪表板 → API 密钥 → +",
     "help_coverHeight": "封面图像的大小（以像素为单位），0 = 原始大小",
-    "help_onlyRemote": "许多应用程序向服务器注册两次（应用程序和播放器）。使用此选项，仅创建接受命令的部分。",
+    "help_onlyRemote": "隐藏从不接受命令的设备（例如不支持远程控制的应用程序）。",
     "help_requestTimeout": "服务器应答的最长等待时间",
     "help_updateInterval": "服务器发送播放状态的频率（2-60 秒）",
     "help_url": "在浏览器中打开它时的地址，包括。端口，例如http://192.168.1.10:8096",
