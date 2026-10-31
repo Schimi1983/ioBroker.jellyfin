@@ -52,6 +52,8 @@ class Jellyfin extends utils.Adapter {
     private sessionIntervalMs = 5_000;
     private coverHeight = 300;
     private onlyRemote = false;
+    /** Id of the Jellyfin server (from /System/Info) */
+    private serverId = '';
 
     /** Current session per device object id. */
     private sessions = new Map<string, SessionInfo>();
@@ -158,6 +160,7 @@ class Jellyfin extends utils.Adapter {
             }
             return false;
         }
+        this.serverId = info.Id ?? this.serverId;
         await this.writeValue('server.name', info.ServerName ?? '');
         await this.writeValue('server.version', info.Version ?? '');
         await this.writeValue('server.updateAvailable', info.HasUpdateAvailable === true);
@@ -357,7 +360,14 @@ class Jellyfin extends utils.Adapter {
         const current = new Map<string, SessionInfo>();
         for (const s of list) {
             // @KI_HINWEIS: sessions of ioBroker itself (this and other jellyfin instances, test scripts) are no devices
-            if (!s?.DeviceId || !s.Id || s.DeviceId.startsWith(OWN_DEVICE_PREFIX)) {
+            // @KI_HINWEIS: Jellyfin 12 registers our own WebSocket connection with DeviceId = server id
+            //     ("Jellyfin Server", client = name of the API key) – it is filtered out as well.
+            if (
+                !s?.DeviceId ||
+                !s.Id ||
+                s.DeviceId.startsWith(OWN_DEVICE_PREFIX) ||
+                (this.serverId !== '' && s.DeviceId === this.serverId)
+            ) {
                 continue;
             }
             const id = deviceObjectId(s.DeviceId);

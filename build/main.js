@@ -60,6 +60,8 @@ class Jellyfin extends utils.Adapter {
   sessionIntervalMs = 5e3;
   coverHeight = 300;
   onlyRemote = false;
+  /** Id of the Jellyfin server (from /System/Info) */
+  serverId = "";
   /** Current session per device object id. */
   sessions = /* @__PURE__ */ new Map();
   /** Devices whose objects exist (from the database or created in this run). */
@@ -143,7 +145,7 @@ class Jellyfin extends utils.Adapter {
    * @returns true if the server answered
    */
   async refreshServerInfo(logErrors) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     if (!this.api) {
       return false;
     }
@@ -156,11 +158,12 @@ class Jellyfin extends utils.Adapter {
       }
       return false;
     }
-    await this.writeValue("server.name", (_a = info.ServerName) != null ? _a : "");
-    await this.writeValue("server.version", (_b = info.Version) != null ? _b : "");
+    this.serverId = (_a = info.Id) != null ? _a : this.serverId;
+    await this.writeValue("server.name", (_b = info.ServerName) != null ? _b : "");
+    await this.writeValue("server.version", (_c = info.Version) != null ? _c : "");
     await this.writeValue("server.updateAvailable", info.HasUpdateAvailable === true);
     await this.writeValue("server.restartPending", info.HasPendingRestart === true);
-    const major = parseInt((_c = info.Version) != null ? _c : "", 10);
+    const major = parseInt((_d = info.Version) != null ? _d : "", 10);
     if (logErrors && !Number.isNaN(major) && major < MIN_SERVER_MAJOR) {
       this.log.warn(
         `Jellyfin ${info.Version} is not supported. Please update the server to version ${MIN_SERVER_MAJOR} or newer.`
@@ -343,7 +346,7 @@ class Jellyfin extends utils.Adapter {
     var _a, _b;
     const current = /* @__PURE__ */ new Map();
     for (const s of list) {
-      if (!(s == null ? void 0 : s.DeviceId) || !s.Id || s.DeviceId.startsWith(OWN_DEVICE_PREFIX)) {
+      if (!(s == null ? void 0 : s.DeviceId) || !s.Id || s.DeviceId.startsWith(OWN_DEVICE_PREFIX) || this.serverId !== "" && s.DeviceId === this.serverId) {
         continue;
       }
       const id = (0, import_ids.deviceObjectId)(s.DeviceId);
