@@ -377,6 +377,8 @@ class Jellyfin extends utils.Adapter {
 
         const opts = { baseUrl: this.api?.baseUrl ?? '', coverHeight: this.coverHeight };
         let playing = 0;
+        // @KI_HINWEIS: set before the states are written – a device whose states are visible must also accept commands.
+        this.sessions = current;
         for (const [id, s] of current) {
             await this.prepareDevice(id, s);
             this.offlineDevices.delete(id);
@@ -387,7 +389,6 @@ class Jellyfin extends utils.Adapter {
                 await this.writeValue(`${id}.${key}`, val);
             }
         }
-        this.sessions = current;
 
         for (const id of this.knownDevices) {
             if (!current.has(id)) {

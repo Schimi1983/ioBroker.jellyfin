@@ -1,4 +1,4 @@
-![Logo](../../admin/jellyfin.png)
+<img src="../../admin/jellyfin.png" alt="Logo" width="100">
 
 # ioBroker.jellyfin – Anleitung
 

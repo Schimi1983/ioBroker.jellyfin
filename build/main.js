@@ -359,6 +359,7 @@ class Jellyfin extends utils.Adapter {
     }
     const opts = { baseUrl: (_b = (_a = this.api) == null ? void 0 : _a.baseUrl) != null ? _b : "", coverHeight: this.coverHeight };
     let playing = 0;
+    this.sessions = current;
     for (const [id, s] of current) {
       await this.prepareDevice(id, s);
       this.offlineDevices.delete(id);
@@ -369,7 +370,6 @@ class Jellyfin extends utils.Adapter {
         await this.writeValue(`${id}.${key}`, val);
       }
     }
-    this.sessions = current;
     for (const id of this.knownDevices) {
       if (!current.has(id)) {
         await this.markOffline(id);

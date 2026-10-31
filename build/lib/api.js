@@ -28,7 +28,6 @@ class JellyfinHttpError extends Error {
    * @param status - HTTP status code (0 = network error / timeout)
    * @param path - request path without query (never contains the API key)
    * @param message - error text
-   * @param message
    */
   constructor(status, path, message) {
     super(message);

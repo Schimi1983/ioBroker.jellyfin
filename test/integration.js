@@ -58,7 +58,9 @@ tests.integration(path.join(__dirname, '..'), {
 
             it('merges app and player of the iPad into one device and ignores its own session', async function () {
                 this.timeout(60000);
-                await waitFor(async () => (await state(`${IPAD}.media.title`))?.val === 'Test Movie', 30000, 'title');
+                // playingDevices is written last – then all states of the device are there
+                await waitFor(async () => (await state('server.playingDevices'))?.val === 1, 30000, 'playingDevices');
+                expect((await state(`${IPAD}.media.title`))?.val).to.equal('Test Movie');
                 expect((await state(`${IPAD}.info.remoteControl`))?.val).to.equal(true);
                 expect((await state(`${IPAD}.media.state`))?.val).to.equal('play');
                 expect((await state(`${IPAD}.media.elapsed`))?.val).to.equal(600);
