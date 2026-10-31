@@ -149,6 +149,11 @@ Jellyfin is a free software project. This adapter is not affiliated with or endo
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (Schimi) Releases are now published by GitHub Actions (trusted publishing with provenance)
+- (Schimi) Removed the news entry of the unpublished version 0.0.1
+
 ### 0.1.0 (2026-10-31)
 
 - (Schimi) Initial release: playback status, cover, remote control, start by title, messages and library scan for Jellyfin 12

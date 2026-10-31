@@ -15,19 +15,6 @@
         "pl": "Pierwsze wydanie: stan odtwarzania, okładka, pilot zdalnego sterowania, początek od tytułu, wiadomości i skanowanie biblioteki pod kątem Jellyfin 12",
         "uk": "Початковий випуск: статус відтворення, обкладинка, пульт дистанційного керування, початок за назвою, повідомлення та сканування бібліотеки для Jellyfin 12",
         "zh-cn": "首次发布：Jellyfin 12 的播放状态、封面、遥控器、标题、消息和库扫描"
-      },
-      "0.0.1": {
-        "en": "initial release",
-        "de": "Erstveröffentlichung",
-        "ru": "Начальная версия",
-        "pt": "lançamento inicial",
-        "nl": "Eerste uitgave",
-        "fr": "Première version",
-        "it": "Versione iniziale",
-        "es": "Versión inicial",
-        "pl": "Pierwsze wydanie",
-        "uk": "Початкова версія",
-        "zh-cn": "首次出版"
       }
     },
     "titleLang": {
