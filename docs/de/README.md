@@ -59,7 +59,8 @@ Unter `jellyfin.0.server` stehen Server-Version, ob ein Update oder Neustart ans
 | TV-App (Fire TV, NVIDIA SHIELD, Android TV) | ✘ nur ein kleiner Schritt | ✔ | ✔ (nicht, wenn der Ton über einen AV-Receiver läuft) |
 | Handy-/Tablet-App | ✘ (Systemlautstärke) | ✘ | ✔ |
 
-- **Handy-App:** Fernsteuern geht nur mit dem **Web-Player** (App-Einstellungen). Ein per ioBroker gestarteter Film wartet eventuell, bis man auf dem Handy einmal auf Play tippt.
+- **Android-Handy-App:** Mit dem integrierten Player (Standard) siehst du, was läuft, die App nimmt aber keine Befehle an. Fernsteuern geht mit dem **Web-Player** (App-Einstellungen) – ein per ioBroker gestarteter Film wartet dann, bis man auf dem Handy einmal auf Play tippt.
+- **iPad-App:** funktioniert ohne Einstellungen, ein per ioBroker gestarteter Film läuft sofort los.
 - **Meldungen:** TV-Apps blenden Meldungen mit Anzeigedauer nach 2–3 Sekunden aus, egal welche Zeit eingestellt ist. Im Browser bleiben Meldungen ohne Anzeigedauer stehen, bis man sie schließt.
 - **Ein Gerät steht auf „nicht verbunden“:** Die App ist geschlossen oder das Gerät aus. Sobald die App wieder verbunden ist, aktualisiert sich alles von selbst.
 - Ein Befehl wird nur gesendet, wenn die App ihn gerade annimmt. Sonst steht ein kurzer Hinweis im Log.

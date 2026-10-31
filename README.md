@@ -68,7 +68,8 @@ Below `jellyfin.0.server` you see the server version, whether an update or resta
 | TV app (Fire TV, NVIDIA SHIELD, Android TV) | ✘ only a small step | ✔ | ✔ (not when the sound goes to an AV receiver) |
 | Phone / tablet app | ✘ (system volume) | ✘ | ✔ |
 
-- **Phone app:** remote control only works with the **web player** (app settings). A film started from ioBroker may wait until you tap play once on the phone.
+- **Android phone app:** with the integrated player (default) you see what is playing, but the app does not accept commands. Remote control works with the **web player** (app settings) – a film started from ioBroker then waits until you tap play once on the phone.
+- **iPad app:** works out of the box, a film started from ioBroker plays immediately.
 - **Messages:** TV apps hide messages with a display time after 2–3 seconds, no matter which time is set. In the browser, messages without a display time stay until they are closed.
 - **A device shows "not connected":** the app is closed or the device is off. As soon as the app connects again, everything updates automatically.
 - A command is only sent if the app accepts it at that moment. Otherwise you find a short note in the log.
