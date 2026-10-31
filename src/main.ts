@@ -8,7 +8,7 @@ import { deviceObjectId } from './lib/ids';
 import { DEVICE_CHANNELS, DEVICE_STATES, REPEAT_STATES, SERVER_STATES, toCommon } from './lib/objects';
 import { parseGeneralCommand, parseMessage, type MessagePayload } from './lib/commands';
 import { checkCommand, reportsAudio, sessionValues, type CommandKind } from './lib/session';
-import type { PlaystateCommand, RepeatMode, SessionInfo, SocketMessage, SystemInfo } from './lib/types';
+import type { ItemInfo, PlaystateCommand, RepeatMode, SessionInfo, SocketMessage, SystemInfo } from './lib/types';
 
 /** DeviceId prefix of all ioBroker connections (`ioBroker-jellyfin.0`, …); filtered out of the device list. */
 const OWN_DEVICE_PREFIX = 'ioBroker-';
@@ -577,6 +577,30 @@ class Jellyfin extends utils.Adapter {
                 }
                 return;
             }
+            case 'command.playTitle': {
+                const term = typeof state.val === 'string' ? state.val.trim() : '';
+                if (!term) {
+                    return;
+                }
+                if (this.allowed(device, s, 'PlayNow', { type: 'playstate' })) {
+                    await this.run(
+                        id,
+                        'PlayNow',
+                        async () => {
+                            const item = /^[0-9a-f]{32}$/i.test(term)
+                                ? { Id: term, Name: term }
+                                : await api.findItem(term, s.UserId);
+                            if (!item) {
+                                throw new Error(`nothing found for "${term}"`);
+                            }
+                            this.log.info(`${this.deviceName(device, s)}: playing "${itemLabel(item)}"`);
+                            await api.playNow(s.Id, [item.Id]);
+                        },
+                        state.val,
+                    );
+                }
+                return;
+            }
             case 'command.message': {
                 const msg = parseMessage(state.val);
                 if (!msg) {
@@ -779,6 +803,19 @@ class Jellyfin extends utils.Adapter {
  */
 function clamp(v: number, min: number, max: number): number {
     return Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : min;
+}
+
+/**
+ * Readable name of a search result for the log, e.g. `Series S01E02 – Title` or `Title (2004)`.
+ *
+ * @param i - item
+ */
+function itemLabel(i: ItemInfo): string {
+    if (i.Type === 'Episode' && i.SeriesName) {
+        const se = `S${String(i.ParentIndexNumber ?? 0).padStart(2, '0')}E${String(i.IndexNumber ?? 0).padStart(2, '0')}`;
+        return `${i.SeriesName} ${se} – ${i.Name ?? ''}`;
+    }
+    return i.ProductionYear ? `${i.Name ?? i.Id} (${i.ProductionYear})` : (i.Name ?? i.Id);
 }
 
 /**

@@ -547,6 +547,28 @@ class Jellyfin extends utils.Adapter {
         }
         return;
       }
+      case "command.playTitle": {
+        const term = typeof state.val === "string" ? state.val.trim() : "";
+        if (!term) {
+          return;
+        }
+        if (this.allowed(device, s, "PlayNow", { type: "playstate" })) {
+          await this.run(
+            id,
+            "PlayNow",
+            async () => {
+              const item = /^[0-9a-f]{32}$/i.test(term) ? { Id: term, Name: term } : await api.findItem(term, s.UserId);
+              if (!item) {
+                throw new Error(`nothing found for "${term}"`);
+              }
+              this.log.info(`${this.deviceName(device, s)}: playing "${itemLabel(item)}"`);
+              await api.playNow(s.Id, [item.Id]);
+            },
+            state.val
+          );
+        }
+        return;
+      }
       case "command.message": {
         const msg = (0, import_commands.parseMessage)(state.val);
         if (!msg) {
@@ -717,6 +739,14 @@ class Jellyfin extends utils.Adapter {
 }
 function clamp(v, min, max) {
   return Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : min;
+}
+function itemLabel(i) {
+  var _a, _b, _c, _d, _e;
+  if (i.Type === "Episode" && i.SeriesName) {
+    const se = `S${String((_a = i.ParentIndexNumber) != null ? _a : 0).padStart(2, "0")}E${String((_b = i.IndexNumber) != null ? _b : 0).padStart(2, "0")}`;
+    return `${i.SeriesName} ${se} \u2013 ${(_c = i.Name) != null ? _c : ""}`;
+  }
+  return i.ProductionYear ? `${(_d = i.Name) != null ? _d : i.Id} (${i.ProductionYear})` : (_e = i.Name) != null ? _e : i.Id;
 }
 function rank(s) {
   return (s.NowPlayingItem ? 2 : 0) + (s.SupportsRemoteControl ? 1 : 0);

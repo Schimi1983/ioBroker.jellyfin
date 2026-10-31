@@ -62,7 +62,7 @@ function reportsAudio(s) {
   return typeof ((_a = s.PlayState) == null ? void 0 : _a.VolumeLevel) === "number";
 }
 function sessionValues(s, opts) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
   const v = {};
   const item = (_a = s.NowPlayingItem) != null ? _a : void 0;
   const ps = (_b = s.PlayState) != null ? _b : {};
@@ -81,13 +81,14 @@ function sessionValues(s, opts) {
   if (item) {
     v["media.state"] = ps.IsPaused ? "pause" : "play";
     v["media.title"] = (_g = item.Name) != null ? _g : "";
-    v["media.type"] = (_h = item.Type) != null ? _h : "";
-    v["media.series"] = (_i = item.SeriesName) != null ? _i : "";
+    v["media.itemId"] = (_h = item.Id) != null ? _h : "";
+    v["media.type"] = (_i = item.Type) != null ? _i : "";
+    v["media.series"] = (_j = item.SeriesName) != null ? _j : "";
     v["media.season"] = item.Type === "Episode" && item.ParentIndexNumber != null ? String(item.ParentIndexNumber) : "";
     v["media.episode"] = item.Type === "Episode" && item.IndexNumber != null ? String(item.IndexNumber) : "";
-    v["media.artist"] = ((_j = item.Artists) != null ? _j : []).join(", ");
-    v["media.album"] = (_k = item.Album) != null ? _k : "";
-    v["media.genre"] = ((_l = item.Genres) != null ? _l : []).join(", ");
+    v["media.artist"] = ((_k = item.Artists) != null ? _k : []).join(", ");
+    v["media.album"] = (_l = item.Album) != null ? _l : "";
+    v["media.genre"] = ((_m = item.Genres) != null ? _m : []).join(", ");
     v["media.year"] = item.ProductionYear ? String(item.ProductionYear) : "";
     v["media.cover"] = coverUrl(s, opts);
     const duration = item.RunTimeTicks ? Math.round(item.RunTimeTicks / TICKS_PER_SECOND) : 0;
@@ -119,7 +120,7 @@ function sessionValues(s, opts) {
     v["media.volume"] = ps.VolumeLevel;
     v["media.mute"] = ps.IsMuted === true;
   }
-  if (ps.RepeatMode && ((_m = s.SupportedCommands) == null ? void 0 : _m.includes("SetRepeatMode"))) {
+  if (ps.RepeatMode && ((_n = s.SupportedCommands) == null ? void 0 : _n.includes("SetRepeatMode"))) {
     v["media.repeat"] = ps.RepeatMode;
   }
   return v;

@@ -1,4 +1,4 @@
-import type { PlaystateCommand, RepeatMode, SessionInfo, SystemInfo } from './types';
+import type { ItemInfo, PlaystateCommand, RepeatMode, SessionInfo, SystemInfo } from './types';
 
 /** Error for every non-2xx answer of the Jellyfin server. */
 export class JellyfinHttpError extends Error {
@@ -194,6 +194,41 @@ export class JellyfinApi {
             body.TimeoutMs = Math.round(timeoutMs);
         }
         await this.request('POST', `/Sessions/${encodeURIComponent(sessionId)}/Message`, body);
+    }
+
+    /**
+     * Searches a playable item by name (movies, episodes, music, videos).
+     *
+     * @param term - search text
+     * @param userId - user of the session (library permissions of this user apply)
+     * @returns best match or `undefined`
+     */
+    public async findItem(term: string, userId?: string): Promise<ItemInfo | undefined> {
+        const q = new URLSearchParams({
+            searchTerm: term,
+            includeItemTypes: 'Movie,Episode,Audio,MusicVideo,Video',
+            recursive: 'true',
+            limit: '10',
+        });
+        if (userId) {
+            q.set('userId', userId);
+        }
+        const res = await this.request<{ Items?: ItemInfo[] }>('GET', `/Items?${q.toString()}`);
+        const items = res?.Items ?? [];
+        const lower = term.toLowerCase();
+        // exact title first, otherwise the server's best match
+        return items.find(i => (i.Name ?? '').toLowerCase() === lower) ?? items[0];
+    }
+
+    /**
+     * POST /Sessions/{id}/Playing – starts playback of items on a client ("PlayNow").
+     *
+     * @param sessionId - Jellyfin session id
+     * @param itemIds - ids of the items to play
+     */
+    public async playNow(sessionId: string, itemIds: string[]): Promise<void> {
+        const q = new URLSearchParams({ playCommand: 'PlayNow', itemIds: itemIds.join(',') });
+        await this.request('POST', `/Sessions/${encodeURIComponent(sessionId)}/Playing?${q.toString()}`);
     }
 
     /** POST /Library/Refresh – starts a library scan (returns immediately). */

@@ -55,7 +55,9 @@ export interface SessionInfo {
     DeviceName?: string;
     Client?: string;
     ApplicationVersion?: string;
+    UserId?: string;
     UserName?: string;
+    PlayableMediaTypes?: string[];
     LastActivityDate?: string;
     IsActive?: boolean;
     SupportsRemoteControl?: boolean;
@@ -75,3 +77,15 @@ export interface SocketMessage {
 /** Playstate commands of POST /Sessions/{id}/Playing/{command}. */
 export type PlaystateCommand =
     'Stop' | 'Pause' | 'Unpause' | 'NextTrack' | 'PreviousTrack' | 'Seek' | 'Rewind' | 'FastForward' | 'PlayPause';
+
+/** One search result of GET /Items (subset of BaseItemDto). */
+export interface ItemInfo {
+    Id: string;
+    Name?: string;
+    Type?: string;
+    MediaType?: string;
+    SeriesName?: string;
+    ParentIndexNumber?: number;
+    IndexNumber?: number;
+    ProductionYear?: number;
+}

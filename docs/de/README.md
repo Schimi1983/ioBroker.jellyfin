@@ -7,6 +7,7 @@ Sieh in ioBroker, was auf deinen [Jellyfin](https://jellyfin.org)-Apps läuft, u
 ## Was du damit machen kannst
 
 - Auf jeder Jellyfin-App (Fernseher, Handy, Browser) sehen, was läuft: Titel, Serie, Folge, Cover, Position
+- Einen Film, eine Folge oder ein Lied über den Titel starten
 - Abspielen, Pause, Stopp, vor- und zurückspulen, an eine Stelle springen
 - Lautstärke ändern oder stumm schalten
 - Eine Meldung auf dem Fernseher anzeigen (z. B. „Es hat geklingelt“)
@@ -33,11 +34,12 @@ Jedes Gerät hat drei Ordner:
 |---|---|
 | `info` | Gerätename, App, Benutzer, ob es verbunden ist und ob es sich steuern lässt |
 | `media` | Was läuft: `state` (play / pause / stop), `title`, `series`, `season`, `episode`, `cover`, `elapsed`, `duration`, dazu `seek`, `volume`, `mute` |
-| `command` | Tasten: `play`, `pause`, `stop`, `next`, `previous`, `forward`, `rewind`, `volumeUp`, `volumeDown`, `toggleMute` und `message` |
+| `command` | Tasten: `play`, `pause`, `stop`, `next`, `previous`, `forward`, `rewind`, `volumeUp`, `volumeDown`, `toggleMute`, `playTitle` und `message` |
 
 **Beispiele**
 
 - **Licht dimmen, wenn ein Film startet:** auf `jellyfin.0.<gerät>.media.state` = `play` reagieren.
+- **Film starten:** Titel in `jellyfin.0.<gerät>.command.playTitle` schreiben, z. B. `Kevin - Allein zu Haus`.
 - **Pause, wenn es klingelt:** `jellyfin.0.<gerät>.command.pause` auf `true` setzen.
 - **Meldung auf dem Fernseher:** Text in `jellyfin.0.<gerät>.command.message` schreiben.
 - **Cover in VIS:** `jellyfin.0.<gerät>.media.cover` als Bildadresse verwenden.

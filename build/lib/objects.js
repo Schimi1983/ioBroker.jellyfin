@@ -90,6 +90,15 @@ const DEVICE_STATES = [
   { id: "media.album", name: "Album", type: "string", role: "media.album", read: true, write: false, def: "" },
   { id: "media.genre", name: "Genre", type: "string", role: "media.genre", read: true, write: false, def: "" },
   { id: "media.year", name: "Year", type: "string", role: "media.date", read: true, write: false, def: "" },
+  {
+    id: "media.itemId",
+    name: "Jellyfin id of the item",
+    type: "string",
+    role: "text",
+    read: true,
+    write: false,
+    def: ""
+  },
   { id: "media.cover", name: "Cover URL", type: "string", role: "media.cover", read: true, write: false, def: "" },
   {
     id: "media.duration",
@@ -157,6 +166,15 @@ const DEVICE_STATES = [
   button("command.volumeUp", "Volume up", "button.volume.up"),
   button("command.volumeDown", "Volume down", "button.volume.down"),
   button("command.toggleMute", "Mute on/off", "button"),
+  {
+    id: "command.playTitle",
+    name: "Play a film, episode or song by its title (or item id)",
+    type: "string",
+    role: "text",
+    read: true,
+    write: true,
+    def: ""
+  },
   {
     id: "command.message",
     name: "Show message on the screen",

@@ -180,6 +180,42 @@ class JellyfinApi {
     }
     await this.request("POST", `/Sessions/${encodeURIComponent(sessionId)}/Message`, body);
   }
+  /**
+   * Searches a playable item by name (movies, episodes, music, videos).
+   *
+   * @param term - search text
+   * @param userId - user of the session (library permissions of this user apply)
+   * @returns best match or `undefined`
+   */
+  async findItem(term, userId) {
+    var _a, _b;
+    const q = new URLSearchParams({
+      searchTerm: term,
+      includeItemTypes: "Movie,Episode,Audio,MusicVideo,Video",
+      recursive: "true",
+      limit: "10"
+    });
+    if (userId) {
+      q.set("userId", userId);
+    }
+    const res = await this.request("GET", `/Items?${q.toString()}`);
+    const items = (_a = res == null ? void 0 : res.Items) != null ? _a : [];
+    const lower = term.toLowerCase();
+    return (_b = items.find((i) => {
+      var _a2;
+      return ((_a2 = i.Name) != null ? _a2 : "").toLowerCase() === lower;
+    })) != null ? _b : items[0];
+  }
+  /**
+   * POST /Sessions/{id}/Playing – starts playback of items on a client ("PlayNow").
+   *
+   * @param sessionId - Jellyfin session id
+   * @param itemIds - ids of the items to play
+   */
+  async playNow(sessionId, itemIds) {
+    const q = new URLSearchParams({ playCommand: "PlayNow", itemIds: itemIds.join(",") });
+    await this.request("POST", `/Sessions/${encodeURIComponent(sessionId)}/Playing?${q.toString()}`);
+  }
   /** POST /Library/Refresh – starts a library scan (returns immediately). */
   async refreshLibrary() {
     await this.request("POST", "/Library/Refresh");

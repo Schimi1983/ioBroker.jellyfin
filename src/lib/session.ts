@@ -90,6 +90,7 @@ export function sessionValues(s: SessionInfo, opts: MappingOptions): Record<stri
     if (item) {
         v['media.state'] = ps.IsPaused ? 'pause' : 'play';
         v['media.title'] = item.Name ?? '';
+        v['media.itemId'] = item.Id ?? '';
         v['media.type'] = item.Type ?? '';
         v['media.series'] = item.SeriesName ?? '';
         v['media.season'] =
