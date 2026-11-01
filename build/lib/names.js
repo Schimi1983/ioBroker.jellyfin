@@ -65,6 +65,19 @@ const LIST = [
     "\u0421\u0435\u0440\u0432\u0435\u0440 Jellyfin",
     "Jellyfin \u670D\u52A1\u5668"
   ),
+  t(
+    "Connected to Jellyfin",
+    "Mit Jellyfin verbunden",
+    "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u043E \u043A Jellyfin",
+    "Conectado ao Jellyfin",
+    "Verbonden met Jellyfin",
+    "Connect\xE9 \xE0 Jellyfin",
+    "Connesso a Jellyfin",
+    "Conectado a Jellyfin",
+    "Po\u0142\u0105czono z Jellyfin",
+    "\u041F\u0456\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u043E \u0434\u043E Jellyfin",
+    "\u5DF2\u8FDE\u63A5\u5230 Jellyfin"
+  ),
   // info
   t(
     "Device name",

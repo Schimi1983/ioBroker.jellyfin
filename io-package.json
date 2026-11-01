@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "jellyfin",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "news": {
+      "0.1.3": {
+        "en": "Existing installations also get the translated names of `info` and `info.connection`",
+        "de": "Bestehende Anlagen haben auch die übersetzten Namen `info` und `info.connection`",
+        "ru": "Существующие установки также получают переведенные названия `info` и `info.connection`",
+        "pt": "Instalações existentes também traduzem os nomes `info` e `info.connection`",
+        "nl": "Bestaande installaties krijgen ook de vertaalde namen `info` en `info.connection`",
+        "fr": "Les installations existantes ont également les noms traduits « info » et « info.connection »",
+        "it": "Le installazioni esistenti hanno anche i nomi tradotti di `info` e `info.connection`",
+        "es": "Las instalaciones existentes también tienen los nombres traducidos de «info» e «info.connection»",
+        "pl": "Istniejące instalacje otrzymują również przetłumaczone nazwy `info` i `info.connection`",
+        "uk": "Існуючі установки також отримують перекладені назви `info` і `info.connection`",
+        "zh-cn": "现有安装还会获得 “info” 和 “info.connection” 的翻译名称"
+      },
       "0.1.2": {
         "en": "Object names are now translated into all 11 admin languages",
         "de": "Objektnamen sind nun in alle 11 Admin-Sprachen übersetzt",

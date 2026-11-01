@@ -449,6 +449,8 @@ class Jellyfin extends utils.Adapter {
   }
   /** Creates the `server` channel. */
   async createServerObjects() {
+    await this.extendObject("info", { common: { name: (0, import_names.tr)("Information") } });
+    await this.extendObject("info.connection", { common: { name: (0, import_names.tr)("Connected to Jellyfin") } });
     await this.extendObject("server", { type: "channel", common: { name: (0, import_names.tr)("Jellyfin server") }, native: {} });
     for (const def of import_objects.SERVER_STATES) {
       await this.extendObject(def.id, { type: "state", common: (0, import_objects.toCommon)(def), native: {} });
