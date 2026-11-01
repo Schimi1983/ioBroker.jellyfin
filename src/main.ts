@@ -474,6 +474,10 @@ class Jellyfin extends utils.Adapter {
 
     /** Creates the `server` channel. */
     private async createServerObjects(): Promise<void> {
+        // @KI_HINWEIS: js-controller keeps the names of existing instanceObjects on upgrade,
+        // so instances installed before 0.1.2 would keep the English-only names.
+        await this.extendObject('info', { common: { name: tr('Information') } });
+        await this.extendObject('info.connection', { common: { name: tr('Connected to Jellyfin') } });
         await this.extendObject('server', { type: 'channel', common: { name: tr('Jellyfin server') }, native: {} });
         for (const def of SERVER_STATES) {
             await this.extendObject(def.id, { type: 'state', common: toCommon(def), native: {} });

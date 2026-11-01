@@ -65,6 +65,19 @@ const LIST: TranslatedName[] = [
         'Сервер Jellyfin',
         'Jellyfin 服务器',
     ),
+    t(
+        'Connected to Jellyfin',
+        'Mit Jellyfin verbunden',
+        'Подключено к Jellyfin',
+        'Conectado ao Jellyfin',
+        'Verbonden met Jellyfin',
+        'Connecté à Jellyfin',
+        'Connesso a Jellyfin',
+        'Conectado a Jellyfin',
+        'Połączono z Jellyfin',
+        'Підключено до Jellyfin',
+        '已连接到 Jellyfin',
+    ),
     // info
     t(
         'Device name',
