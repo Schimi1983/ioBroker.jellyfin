@@ -3,6 +3,8 @@
  * Roles follow https://github.com/ioBroker/ioBroker.docs/blob/master/docs/en/dev/stateroles.md
  */
 
+import { tr } from './names';
+
 /** Definition of one state below a device (`<device>.<id>`). */
 export interface StateDef {
     /** id relative to the device (or namespace for server states) */
@@ -259,7 +261,7 @@ export const SERVER_STATES: StateDef[] = [
  */
 export function toCommon(def: StateDef): ioBroker.StateCommon {
     const common: ioBroker.StateCommon = {
-        name: def.name,
+        name: tr(def.name),
         type: def.type,
         role: def.role,
         read: def.read,

@@ -6,6 +6,7 @@ import * as utils from '@iobroker/adapter-core';
 import { JellyfinApi, JellyfinHttpError, normalizeBaseUrl } from './lib/api';
 import { displayName, groupSessions } from './lib/devices';
 import { DEVICE_CHANNELS, DEVICE_STATES, REPEAT_STATES, SERVER_STATES, toCommon } from './lib/objects';
+import { tr } from './lib/names';
 import { parseGeneralCommand, parseMessage, type MessagePayload } from './lib/commands';
 import { checkCommand, reportsAudio, sessionValues, type CommandKind } from './lib/session';
 import type { ItemInfo, PlaystateCommand, RepeatMode, SessionInfo, SocketMessage, SystemInfo } from './lib/types';
@@ -417,7 +418,7 @@ class Jellyfin extends utils.Adapter {
         });
         if (!this.preparedDevices.has(id)) {
             for (const [ch, chName] of Object.entries(DEVICE_CHANNELS)) {
-                await this.extendObject(`${id}.${ch}`, { type: 'channel', common: { name: chName }, native: {} });
+                await this.extendObject(`${id}.${ch}`, { type: 'channel', common: { name: tr(chName) }, native: {} });
             }
             for (const def of DEVICE_STATES) {
                 await this.extendObject(`${id}.${def.id}`, { type: 'state', common: toCommon(def), native: {} });
@@ -473,7 +474,7 @@ class Jellyfin extends utils.Adapter {
 
     /** Creates the `server` channel. */
     private async createServerObjects(): Promise<void> {
-        await this.extendObject('server', { type: 'channel', common: { name: 'Jellyfin server' }, native: {} });
+        await this.extendObject('server', { type: 'channel', common: { name: tr('Jellyfin server') }, native: {} });
         for (const def of SERVER_STATES) {
             await this.extendObject(def.id, { type: 'state', common: toCommon(def), native: {} });
         }

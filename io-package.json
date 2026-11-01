@@ -118,7 +118,19 @@
       "_id": "info",
       "type": "channel",
       "common": {
-        "name": "Information"
+        "name": {
+          "en": "Information",
+          "de": "Informationen",
+          "ru": "Информация",
+          "pt": "Informações",
+          "nl": "Informatie",
+          "fr": "Informations",
+          "it": "Informazioni",
+          "es": "Información",
+          "pl": "Informacje",
+          "uk": "Інформація",
+          "zh-cn": "信息"
+        }
       },
       "native": {}
     },
@@ -127,7 +139,19 @@
       "type": "state",
       "common": {
         "role": "indicator.connected",
-        "name": "Device or service connected",
+        "name": {
+          "en": "Connected to Jellyfin",
+          "de": "Mit Jellyfin verbunden",
+          "ru": "Подключено к Jellyfin",
+          "pt": "Conectado ao Jellyfin",
+          "nl": "Verbonden met Jellyfin",
+          "fr": "Connecté à Jellyfin",
+          "it": "Connesso a Jellyfin",
+          "es": "Conectado a Jellyfin",
+          "pl": "Połączono z Jellyfin",
+          "uk": "Підключено до Jellyfin",
+          "zh-cn": "已连接到 Jellyfin"
+        },
         "type": "boolean",
         "read": true,
         "write": false,

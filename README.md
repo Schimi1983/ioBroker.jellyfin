@@ -149,6 +149,10 @@ Jellyfin is a free software project. This adapter is not affiliated with or endo
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (Schimi) Object names are now translated into all 11 admin languages
+
 ### 0.1.1 (2026-10-31)
 
 - (Schimi) Releases are now published by GitHub Actions (trusted publishing with provenance)
