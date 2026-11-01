@@ -26,6 +26,7 @@ __export(objects_exports, {
   toCommon: () => toCommon
 });
 module.exports = __toCommonJS(objects_exports);
+var import_names = require("./names");
 const DEVICE_CHANNELS = {
   info: "Information",
   media: "Media",
@@ -237,7 +238,7 @@ const SERVER_STATES = [
 ];
 function toCommon(def) {
   const common = {
-    name: def.name,
+    name: (0, import_names.tr)(def.name),
     type: def.type,
     role: def.role,
     read: def.read,

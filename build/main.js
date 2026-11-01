@@ -25,6 +25,7 @@ var utils = __toESM(require("@iobroker/adapter-core"));
 var import_api = require("./lib/api");
 var import_devices = require("./lib/devices");
 var import_objects = require("./lib/objects");
+var import_names = require("./lib/names");
 var import_commands = require("./lib/commands");
 var import_session = require("./lib/session");
 const OWN_DEVICE_PREFIX = "ioBroker-";
@@ -396,7 +397,7 @@ class Jellyfin extends utils.Adapter {
     });
     if (!this.preparedDevices.has(id)) {
       for (const [ch, chName] of Object.entries(import_objects.DEVICE_CHANNELS)) {
-        await this.extendObject(`${id}.${ch}`, { type: "channel", common: { name: chName }, native: {} });
+        await this.extendObject(`${id}.${ch}`, { type: "channel", common: { name: (0, import_names.tr)(chName) }, native: {} });
       }
       for (const def of import_objects.DEVICE_STATES) {
         await this.extendObject(`${id}.${def.id}`, { type: "state", common: (0, import_objects.toCommon)(def), native: {} });
@@ -448,7 +449,7 @@ class Jellyfin extends utils.Adapter {
   }
   /** Creates the `server` channel. */
   async createServerObjects() {
-    await this.extendObject("server", { type: "channel", common: { name: "Jellyfin server" }, native: {} });
+    await this.extendObject("server", { type: "channel", common: { name: (0, import_names.tr)("Jellyfin server") }, native: {} });
     for (const def of import_objects.SERVER_STATES) {
       await this.extendObject(def.id, { type: "state", common: (0, import_objects.toCommon)(def), native: {} });
     }
