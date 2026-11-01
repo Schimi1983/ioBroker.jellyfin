@@ -166,6 +166,8 @@ Jellyfin is a free software project. This adapter is not affiliated with or endo
 
 - (Schimi) Initial release: playback status, cover, remote control, start by title, messages and library scan for Jellyfin 12
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 
 MIT License
