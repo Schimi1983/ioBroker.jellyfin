@@ -23,7 +23,7 @@ __export(ids_exports, {
 module.exports = __toCommonJS(ids_exports);
 var import_node_crypto = require("node:crypto");
 function deviceObjectId(deviceId) {
-  if (/^[A-Za-z0-9_-]{1,40}$/.test(deviceId)) {
+  if (/^[a-z0-9_-]{1,40}$/.test(deviceId)) {
     return deviceId;
   }
   return (0, import_node_crypto.createHash)("sha1").update(deviceId).digest("hex").slice(0, 16);

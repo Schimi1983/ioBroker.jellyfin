@@ -10,7 +10,8 @@ import { createHash } from 'node:crypto';
  * @returns id part that is safe to use below the adapter namespace
  */
 export function deviceObjectId(deviceId: string): string {
-    if (/^[A-Za-z0-9_-]{1,40}$/.test(deviceId)) {
+    // @KI_HINWEIS: only lowercase ids are kept – two ids that differ only in case must not collide.
+    if (/^[a-z0-9_-]{1,40}$/.test(deviceId)) {
         return deviceId;
     }
     return createHash('sha1').update(deviceId).digest('hex').slice(0, 16);

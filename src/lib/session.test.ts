@@ -44,6 +44,11 @@ describe('deviceObjectId', () => {
         expect(deviceObjectId('b0ce7344f928a75f5b9b155f-fefa-43d5-8b55-0123456789ab')).to.match(/^[0-9a-f]{16}$/);
         expect(deviceObjectId('a.b')).to.match(/^[0-9a-f]{16}$/);
     });
+
+    it('hashes ids with uppercase letters, so ids never differ only in case', () => {
+        expect(deviceObjectId('AbC123')).to.match(/^[0-9a-f]{16}$/);
+        expect(deviceObjectId('AbC123')).to.not.equal(deviceObjectId('abc123'));
+    });
 });
 
 describe('normalizeBaseUrl', () => {
@@ -84,7 +89,7 @@ describe('sessionValues', () => {
         );
         expect(v['media.volume']).to.equal(40);
         expect(v['media.mute']).to.equal(true);
-        expect(v['media.repeat']).to.equal('RepeatNone');
+        expect(v['media.repeat']).to.equal(0);
     });
     it('clears media values when nothing plays', () => {
         const v = sessionValues({ ...tv, NowPlayingItem: null }, opts);

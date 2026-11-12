@@ -87,9 +87,9 @@ tests.integration(path.join(__dirname, '..'), {
 
             it('rejects an unsupported command and resets the value', async function () {
                 this.timeout(60000);
-                await harness.states.setStateAsync(`${NS}.${IPAD}.media.repeat`, { val: 'RepeatOne', ack: false });
+                await harness.states.setStateAsync(`${NS}.${IPAD}.media.repeat`, { val: 2, ack: false });
                 await waitFor(async () => (await state(`${IPAD}.media.repeat`))?.ack === true, 30000, 'reset');
-                expect((await state(`${IPAD}.media.repeat`))?.val).to.not.equal('RepeatOne');
+                expect((await state(`${IPAD}.media.repeat`))?.val).to.not.equal(2);
                 expect(mock.find('POST', '/Sessions/sess-ipad-app/Command')).to.have.length(0);
             });
 

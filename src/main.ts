@@ -5,7 +5,7 @@
 import * as utils from '@iobroker/adapter-core';
 import { JellyfinApi, JellyfinHttpError, normalizeBaseUrl } from './lib/api';
 import { displayName, groupSessions } from './lib/devices';
-import { DEVICE_CHANNELS, DEVICE_STATES, REPEAT_STATES, SERVER_STATES, toCommon } from './lib/objects';
+import { DEVICE_CHANNELS, DEVICE_STATES, REPEAT_MODES, SERVER_STATES, toCommon } from './lib/objects';
 import { tr } from './lib/names';
 import { parseGeneralCommand, parseMessage, type MessagePayload } from './lib/commands';
 import { checkCommand, reportsAudio, sessionValues, type CommandKind } from './lib/session';
@@ -45,6 +45,8 @@ class Jellyfin extends utils.Adapter {
     private socket: WebSocket | null = null;
     private keepAliveTimer: ioBroker.Interval | undefined;
     private reconnectTimer: ioBroker.Timeout | undefined;
+    private connectTimer: ioBroker.Timeout | undefined;
+    private requestTimeoutMs = 10_000;
     private serverInfoTimer: ioBroker.Interval | undefined;
     private reconnectDelay = RECONNECT_MIN_MS;
     private stopping = false;
@@ -100,12 +102,13 @@ class Jellyfin extends utils.Adapter {
         this.coverHeight = clamp(Number(this.config.coverHeight ?? 300), 0, 2000);
         this.onlyRemote = this.config.onlyRemoteControllable === true;
 
+        this.requestTimeoutMs = clamp(Number(this.config.requestTimeout) || 10, 2, 60) * 1000;
         this.api = new JellyfinApi({
             baseUrl,
             apiKey,
             deviceId: this.ownDeviceId,
             version: this.version ?? '0.0.0',
-            timeoutMs: clamp(Number(this.config.requestTimeout) || 10, 2, 60) * 1000,
+            timeoutMs: this.requestTimeoutMs,
         });
 
         await this.createServerObjects();
@@ -212,7 +215,18 @@ class Jellyfin extends utils.Adapter {
             return;
         }
         this.socket = ws;
+        // @KI_HINWEIS: WebSocket has no connect timeout of its own – without this a hanging connect
+        // would wait for the operating system's TCP timeout before the reconnect logic starts.
+        this.clearConnectTimer();
+        this.connectTimer = this.setTimeout(() => {
+            this.connectTimer = undefined;
+            if (ws.readyState === WebSocket.CONNECTING) {
+                this.log.debug('WebSocket connect timeout');
+                ws.close();
+            }
+        }, this.requestTimeoutMs);
         ws.onopen = () => {
+            this.clearConnectTimer();
             this.reconnectDelay = RECONNECT_MIN_MS;
             this.lastConnectError = '';
             // "initial delay, interval" in ms – the server then pushes the session list in this interval
@@ -235,6 +249,7 @@ class Jellyfin extends utils.Adapter {
                 return;
             }
             this.socket = null;
+            this.clearConnectTimer();
             this.stopKeepAlive();
             void this.setState('info.connection', false, true);
             if (this.stopping) {
@@ -244,6 +259,14 @@ class Jellyfin extends utils.Adapter {
             this.markAllOffline();
             this.scheduleReconnect();
         };
+    }
+
+    /** Stops the connect timeout of the WebSocket. */
+    private clearConnectTimer(): void {
+        if (this.connectTimer) {
+            this.clearTimeout(this.connectTimer);
+            this.connectTimer = undefined;
+        }
     }
 
     private scheduleReconnect(): void {
@@ -573,10 +596,13 @@ class Jellyfin extends utils.Adapter {
                 return;
             }
             case 'media.repeat': {
-                const mode = String(state.val) as RepeatMode;
+                // 0/1/2 (role media.mode.repeat); the Jellyfin names are accepted as well
+                const raw = state.val;
+                const mode: RepeatMode | undefined =
+                    typeof raw === 'number' ? REPEAT_MODES[raw] : REPEAT_MODES.find(m => m === String(raw));
                 let ok = false;
-                if (!(mode in REPEAT_STATES)) {
-                    this.log.warn(`Invalid repeat mode "${mode}", allowed: ${Object.keys(REPEAT_STATES).join(', ')}`);
+                if (!mode) {
+                    this.log.warn(`Invalid repeat mode "${String(raw)}", allowed: 0 (off), 1 (all), 2 (one)`);
                 } else if (this.allowed(device, s, 'SetRepeatMode', { type: 'general', name: 'SetRepeatMode' })) {
                     ok = await this.run(id, 'SetRepeatMode', () => api.setRepeatMode(s.Id, mode), undefined);
                 }
@@ -800,6 +826,7 @@ class Jellyfin extends utils.Adapter {
     private onUnload(callback: () => void): void {
         try {
             this.stopping = true;
+            this.clearConnectTimer();
             this.stopKeepAlive();
             if (this.reconnectTimer) {
                 this.clearTimeout(this.reconnectTimer);

@@ -21,6 +21,7 @@ __export(objects_exports, {
   DEVICE_CHANNELS: () => DEVICE_CHANNELS,
   DEVICE_STATES: () => DEVICE_STATES,
   MEDIA_STATES: () => MEDIA_STATES,
+  REPEAT_MODES: () => REPEAT_MODES,
   REPEAT_STATES: () => REPEAT_STATES,
   SERVER_STATES: () => SERVER_STATES,
   toCommon: () => toCommon
@@ -33,11 +34,8 @@ const DEVICE_CHANNELS = {
   command: "Commands"
 };
 const MEDIA_STATES = { play: "play", pause: "pause", stop: "stop" };
-const REPEAT_STATES = {
-  RepeatNone: "off",
-  RepeatAll: "all",
-  RepeatOne: "one"
-};
+const REPEAT_MODES = ["RepeatNone", "RepeatAll", "RepeatOne"];
+const REPEAT_STATES = { 0: "off", 1: "all", 2: "one" };
 const button = (id, name, role) => ({
   id,
   name,
@@ -49,7 +47,7 @@ const button = (id, name, role) => ({
 const DEVICE_STATES = [
   // info
   { id: "info.name", name: "Device name", type: "string", role: "info.name", read: true, write: false },
-  { id: "info.client", name: "App", type: "string", role: "media.player.type", read: true, write: false },
+  { id: "info.client", name: "App", type: "string", role: "text", read: true, write: false },
   { id: "info.version", name: "App version", type: "string", role: "info.firmware", read: true, write: false },
   { id: "info.user", name: "User", type: "string", role: "text", read: true, write: false },
   {
@@ -149,10 +147,12 @@ const DEVICE_STATES = [
   {
     id: "media.repeat",
     name: "Repeat",
-    type: "string",
-    role: "state",
+    type: "number",
+    role: "media.mode.repeat",
     read: true,
     write: true,
+    min: 0,
+    max: 2,
     states: REPEAT_STATES
   },
   // commands
@@ -266,6 +266,7 @@ function toCommon(def) {
   DEVICE_CHANNELS,
   DEVICE_STATES,
   MEDIA_STATES,
+  REPEAT_MODES,
   REPEAT_STATES,
   SERVER_STATES,
   toCommon

@@ -26,7 +26,7 @@ export interface StateDef {
     /** common.max */
     max?: number;
     /** common.states */
-    states?: Record<string, string>;
+    states?: Record<string | number, string>;
     /** common.def */
     def?: ioBroker.StateValue;
 }
@@ -41,12 +41,11 @@ export const DEVICE_CHANNELS: Record<string, string> = {
 /** Media state values (role `media.state`). */
 export const MEDIA_STATES: Record<string, string> = { play: 'play', pause: 'pause', stop: 'stop' };
 
-/** Repeat modes, value = Jellyfin RepeatMode. */
-export const REPEAT_STATES: Record<string, string> = {
-    RepeatNone: 'off',
-    RepeatAll: 'all',
-    RepeatOne: 'one',
-};
+/** Jellyfin repeat modes, index = value of `media.repeat` (role `media.mode.repeat`: 0 none, 1 all, 2 one). */
+export const REPEAT_MODES = ['RepeatNone', 'RepeatAll', 'RepeatOne'] as const;
+
+/** Display texts of `media.repeat`. */
+export const REPEAT_STATES: Record<number, string> = { 0: 'off', 1: 'all', 2: 'one' };
 
 const button = (id: string, name: string, role: string): StateDef => ({
     id,
@@ -61,7 +60,7 @@ const button = (id: string, name: string, role: string): StateDef => ({
 export const DEVICE_STATES: StateDef[] = [
     // info
     { id: 'info.name', name: 'Device name', type: 'string', role: 'info.name', read: true, write: false },
-    { id: 'info.client', name: 'App', type: 'string', role: 'media.player.type', read: true, write: false },
+    { id: 'info.client', name: 'App', type: 'string', role: 'text', read: true, write: false },
     { id: 'info.version', name: 'App version', type: 'string', role: 'info.firmware', read: true, write: false },
     { id: 'info.user', name: 'User', type: 'string', role: 'text', read: true, write: false },
     {
@@ -163,10 +162,12 @@ export const DEVICE_STATES: StateDef[] = [
     {
         id: 'media.repeat',
         name: 'Repeat',
-        type: 'string',
-        role: 'state',
+        type: 'number',
+        role: 'media.mode.repeat',
         read: true,
         write: true,
+        min: 0,
+        max: 2,
         states: REPEAT_STATES,
     },
 

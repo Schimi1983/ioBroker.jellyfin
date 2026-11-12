@@ -25,6 +25,7 @@ __export(session_exports, {
   sessionValues: () => sessionValues
 });
 module.exports = __toCommonJS(session_exports);
+var import_objects = require("./objects");
 const TICKS_PER_SECOND = 1e7;
 function coverUrl(s, opts) {
   var _a;
@@ -121,7 +122,7 @@ function sessionValues(s, opts) {
     v["media.mute"] = ps.IsMuted === true;
   }
   if (ps.RepeatMode && ((_n = s.SupportedCommands) == null ? void 0 : _n.includes("SetRepeatMode"))) {
-    v["media.repeat"] = ps.RepeatMode;
+    v["media.repeat"] = Math.max(0, import_objects.REPEAT_MODES.indexOf(ps.RepeatMode));
   }
   return v;
 }

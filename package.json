@@ -33,7 +33,7 @@
     "url": "https://github.com/Schimi1983/ioBroker.jellyfin.git"
   },
   "engines": {
-    "node": ">= 22"
+    "node": ">=22.0.0"
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.4.3"
@@ -59,7 +59,6 @@
     "admin{,/!(src)/**}/!(tsconfig|tsconfig.*|.eslintrc).{json,json5}",
     "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
     "build/",
-    "www/",
     "io-package.json",
     "LICENSE"
   ],

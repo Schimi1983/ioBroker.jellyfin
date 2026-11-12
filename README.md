@@ -104,7 +104,7 @@ Below `jellyfin.0.server` you see the server version, whether an update or resta
 | `media.seek` | number (%) | read/write | position in percent, write to jump |
 | `media.volume` | number (%) | read/write | volume (only filled if the app reports its volume) |
 | `media.mute` | boolean | read/write | mute (only filled if the app reports its volume) |
-| `media.repeat` | string | read/write | `RepeatNone`, `RepeatAll`, `RepeatOne` (only filled if the app supports it) |
+| `media.repeat` | number | read/write | `0` off, `1` all, `2` one (only filled if the app supports it) |
 | `media.itemId` | string | read | Jellyfin id of the current item |
 | `command.*` | boolean | write | buttons |
 | `command.playTitle` | string | read/write | title (search, exact match preferred; a series starts with its first episode) or Jellyfin item id |
@@ -149,6 +149,13 @@ Jellyfin is a free software project. This adapter is not affiliated with or endo
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (Schimi) **Changed:** `media.repeat` is now a number with role `media.mode.repeat` (0 off, 1 all, 2 one) instead of the Jellyfin names; scripts that write `RepeatNone`/`RepeatAll`/`RepeatOne` keep working
+- (Schimi) Device ids that contain uppercase letters are hashed, so two ids can never differ only in case
+- (Schimi) The connection to Jellyfin is given up and retried if it cannot be opened within the request timeout
+- (Schimi) `info.client` uses the role `text`
+
 ### 0.1.3 (2026-11-01)
 
 - (Schimi) Existing installations also get the translated names of `info` and `info.connection`

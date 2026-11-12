@@ -1,4 +1,5 @@
 import type { SessionInfo } from './types';
+import { REPEAT_MODES } from './objects';
 
 /** Jellyfin time unit: 1 tick = 100 ns. */
 export const TICKS_PER_SECOND = 10_000_000;
@@ -132,7 +133,7 @@ export function sessionValues(s: SessionInfo, opts: MappingOptions): Record<stri
         v['media.mute'] = ps.IsMuted === true;
     }
     if (ps.RepeatMode && s.SupportedCommands?.includes('SetRepeatMode')) {
-        v['media.repeat'] = ps.RepeatMode;
+        v['media.repeat'] = Math.max(0, REPEAT_MODES.indexOf(ps.RepeatMode));
     }
     return v;
 }
