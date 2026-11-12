@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "jellyfin",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "news": {
+      "0.1.5": {
+        "en": "Devices that are offline at adapter start also get the updated objects (`media.repeat` as number, `info.client` role) and their old repeat value is converted",
+        "de": "Geräte, die beim Adapterstart offline sind, erhalten auch neue Objekte (`media.repeat` als Nummer, `info.client` Rolle) und ihr alter Wiederholwert wird konvertiert",
+        "ru": "Устройства, находящиеся в автономном режиме на момент запуска адаптера, также получают обновленные объекты (`media.repeat` в виде числа, роль `info.client`), а их старое значение повтора преобразуется",
+        "pt": "Dispositivos off-line no início do adaptador também recebem os objetos atualizados (`media.repeat` como número, `info.client`).",
+        "nl": "Apparaten die bij het starten van de adapter offline zijn, krijgen ook de bijgewerkte objecten (`media.repeat` als nummer, `info.client` rol) en hun oude herhalingswaarde wordt geconverteerd",
+        "fr": "Les appareils hors ligne au démarrage de l'adaptateur reçoivent les objets mis à jour (media.repeat comme numéro, rôle info.client) et leur ancienne valeur de répétition est convertie",
+        "it": "Anche i dispositivi offline all'avvio dell'adattatore ricevono gli oggetti aggiornati (`media.repeat` come numero, `info.client`)",
+        "es": "Los dispositivos desconectados al iniciar el adaptador también obtienen los objetos actualizados (`media.repeat` como número, `info.client` rol) y su antiguo valor de repetición se convierte",
+        "pl": "Urządzenia, które są offline podczas uruchamiania adaptera, również otrzymują zaktualizowane obiekty (`media.repeat` jako numer, rola `info.client`), a ich stara wartość powtarzania jest konwertowana",
+        "uk": "Пристрої, які перебувають в автономному режимі під час запуску адаптера, також отримують оновлені об'єкти (`media.repeat` як номер, роль `info.client`) і їх старе значення повторення перетворюється",
+        "zh-cn": "适配器启动时处于离线状态的设备也会获得更新的对象（“media.repeat” 为数字，“info.client” 角色），其原来的重复值将被转换"
+      },
       "0.1.4": {
         "en": "**Changed:** `media.repeat` is now a number with role `media.mode.repeat` (0 off, 1 all, 2 one) instead of the Jellyfin names; scripts that write `RepeatNone`/`RepeatAll`/`RepeatOne` keep working\nDevice ids that contain uppercase letters are hashed, so two ids can never differ only in case\nThe connection to Jellyfin is given up and retried if it cannot be opened within the request timeout\n`info.client` uses the role `text`",
         "de": "**Geändert: ** `media.repeat` ist jetzt eine Zahl mit der Rolle `media.mode.repeat` (0 off, 1 all, 2 one) statt der Jellyfin-Namen; Skripte mit `repeatNone`/`repeatAll`/`repeatOne` funktionieren weiter\nGeräte-IDs mit Großbuchstaben sind gehasht, zwei IDs unterscheiden sich also nie\nDie Verbindung zu Jellyfin wird unterbrochen und erneut versucht, wenn die Anfrage abgelaufen ist.\ninfo.client hat die Rolle „Text“",
