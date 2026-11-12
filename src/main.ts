@@ -64,6 +64,8 @@ class Jellyfin extends utils.Adapter {
     private knownDevices = new Set<string>();
     /** Devices whose objects were created/updated in this run, value = device name written. */
     private preparedDevices = new Map<string, string>();
+    /** Devices whose channel and state objects were updated in this run. */
+    private updatedDevices = new Set<string>();
     /** Devices currently marked as not connected (avoids rewriting the offline values every push). */
     private offlineDevices = new Set<string>();
     /** Last written value per state id (relative), we are the only writer of ack values. */
@@ -113,7 +115,11 @@ class Jellyfin extends utils.Adapter {
 
         await this.createServerObjects();
         for (const dev of await this.getDevicesAsync()) {
-            this.knownDevices.add(dev._id.slice(this.namespace.length + 1));
+            const id = dev._id.slice(this.namespace.length + 1);
+            this.knownDevices.add(id);
+            // @KI_HINWEIS: devices that are offline right now still get the current object definitions
+            // (otherwise e.g. an old `media.repeat` would keep its string type until the device returns).
+            await this.updateDeviceObjects(id);
         }
 
         for (const pattern of ['*.command.*', '*.media.seek', '*.media.volume', '*.media.mute', '*.media.repeat']) {
@@ -440,18 +446,51 @@ class Jellyfin extends utils.Adapter {
             native: { deviceId: s.DeviceId },
         });
         if (!this.preparedDevices.has(id)) {
-            for (const [ch, chName] of Object.entries(DEVICE_CHANNELS)) {
-                await this.extendObject(`${id}.${ch}`, { type: 'channel', common: { name: tr(chName) }, native: {} });
-            }
-            for (const def of DEVICE_STATES) {
-                await this.extendObject(`${id}.${def.id}`, { type: 'state', common: toCommon(def), native: {} });
-            }
+            await this.updateDeviceObjects(id);
             if (!this.knownDevices.has(id)) {
                 this.log.info(`New Jellyfin device: ${name}`);
             }
         }
         this.knownDevices.add(id);
         this.preparedDevices.set(id, name);
+    }
+
+    /**
+     * Creates or updates the channels and states of a device (once per adapter run).
+     *
+     * @param id - device object id
+     */
+    private async updateDeviceObjects(id: string): Promise<void> {
+        if (this.updatedDevices.has(id)) {
+            return;
+        }
+        this.updatedDevices.add(id);
+        for (const [ch, chName] of Object.entries(DEVICE_CHANNELS)) {
+            await this.extendObject(`${id}.${ch}`, { type: 'channel', common: { name: tr(chName) }, native: {} });
+        }
+        for (const def of DEVICE_STATES) {
+            const stateId = `${id}.${def.id}`;
+            const common = toCommon(def);
+            const existing = await this.getObjectAsync(stateId);
+            if (
+                existing?.type === 'state' &&
+                common.states &&
+                JSON.stringify(existing.common.states) !== JSON.stringify(common.states)
+            ) {
+                // @KI_HINWEIS: extendObject merges common.states, so outdated keys would stay; replace them
+                // (common.custom, e.g. history settings, is kept).
+                const obj: ioBroker.StateObject = { ...existing, common: { ...existing.common, ...common } };
+                await this.setObject(stateId, obj);
+            } else {
+                await this.extendObject(stateId, { type: 'state', common, native: {} });
+            }
+        }
+        // `media.repeat` was a string with the Jellyfin names up to 0.1.3
+        const repeat = await this.getStateAsync(`${id}.media.repeat`);
+        if (repeat && typeof repeat.val === 'string') {
+            const idx = REPEAT_MODES.findIndex(m => m === repeat.val);
+            await this.setState(`${id}.media.repeat`, idx >= 0 ? idx : null, true);
+        }
     }
 
     /**

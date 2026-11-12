@@ -71,6 +71,8 @@ class Jellyfin extends utils.Adapter {
   knownDevices = /* @__PURE__ */ new Set();
   /** Devices whose objects were created/updated in this run, value = device name written. */
   preparedDevices = /* @__PURE__ */ new Map();
+  /** Devices whose channel and state objects were updated in this run. */
+  updatedDevices = /* @__PURE__ */ new Set();
   /** Devices currently marked as not connected (avoids rewriting the offline values every push). */
   offlineDevices = /* @__PURE__ */ new Set();
   /** Last written value per state id (relative), we are the only writer of ack values. */
@@ -115,7 +117,9 @@ class Jellyfin extends utils.Adapter {
     });
     await this.createServerObjects();
     for (const dev of await this.getDevicesAsync()) {
-      this.knownDevices.add(dev._id.slice(this.namespace.length + 1));
+      const id = dev._id.slice(this.namespace.length + 1);
+      this.knownDevices.add(id);
+      await this.updateDeviceObjects(id);
     }
     for (const pattern of ["*.command.*", "*.media.seek", "*.media.volume", "*.media.mute", "*.media.repeat"]) {
       this.subscribeStates(pattern);
@@ -416,18 +420,43 @@ class Jellyfin extends utils.Adapter {
       native: { deviceId: s.DeviceId }
     });
     if (!this.preparedDevices.has(id)) {
-      for (const [ch, chName] of Object.entries(import_objects.DEVICE_CHANNELS)) {
-        await this.extendObject(`${id}.${ch}`, { type: "channel", common: { name: (0, import_names.tr)(chName) }, native: {} });
-      }
-      for (const def of import_objects.DEVICE_STATES) {
-        await this.extendObject(`${id}.${def.id}`, { type: "state", common: (0, import_objects.toCommon)(def), native: {} });
-      }
+      await this.updateDeviceObjects(id);
       if (!this.knownDevices.has(id)) {
         this.log.info(`New Jellyfin device: ${name}`);
       }
     }
     this.knownDevices.add(id);
     this.preparedDevices.set(id, name);
+  }
+  /**
+   * Creates or updates the channels and states of a device (once per adapter run).
+   *
+   * @param id - device object id
+   */
+  async updateDeviceObjects(id) {
+    if (this.updatedDevices.has(id)) {
+      return;
+    }
+    this.updatedDevices.add(id);
+    for (const [ch, chName] of Object.entries(import_objects.DEVICE_CHANNELS)) {
+      await this.extendObject(`${id}.${ch}`, { type: "channel", common: { name: (0, import_names.tr)(chName) }, native: {} });
+    }
+    for (const def of import_objects.DEVICE_STATES) {
+      const stateId = `${id}.${def.id}`;
+      const common = (0, import_objects.toCommon)(def);
+      const existing = await this.getObjectAsync(stateId);
+      if ((existing == null ? void 0 : existing.type) === "state" && common.states && JSON.stringify(existing.common.states) !== JSON.stringify(common.states)) {
+        const obj = { ...existing, common: { ...existing.common, ...common } };
+        await this.setObject(stateId, obj);
+      } else {
+        await this.extendObject(stateId, { type: "state", common, native: {} });
+      }
+    }
+    const repeat = await this.getStateAsync(`${id}.media.repeat`);
+    if (repeat && typeof repeat.val === "string") {
+      const idx = import_objects.REPEAT_MODES.findIndex((m) => m === repeat.val);
+      await this.setState(`${id}.media.repeat`, idx >= 0 ? idx : null, true);
+    }
   }
   /**
    * Marks a device as not connected (once).
