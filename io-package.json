@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "jellyfin",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "news": {
+      "0.1.6": {
+        "en": "Outdated value lists of states are replaced without `setObject()` (repository checker S5054)\nErrors while marking devices as not connected after a lost connection are logged instead of being swallowed",
+        "de": "Veraltete Statuslisten werden durch `setObject () `ersetzt (Repository-Checker S5054)\nFehler beim Markieren von Geräten nach Verbindungsverlust werden geloggt statt verschluckt",
+        "ru": "Устаревшие списки значений состояний заменяются без `setObject () `(средство проверки репозитория S5054)\nОшибки при маркировке устройств как неподключенных после потери соединения регистрируются, а не проглатываются",
+        "pt": "Listas de estados desatualizadas são substituídas sem `setObject () `(repository checker S5054)\nErros ao marcar dispositivos como não conectados após uma conexão perdida são registrados em vez de engolidos",
+        "nl": "Verouderde statelijsten met waarden worden vervangen zonder `setObject () `(repository checker S5054)\nFouten bij het markeren van apparaten als niet verbonden nadat een verbinding is verbroken, worden geregistreerd in plaats van te worden ingeslikt",
+        "fr": "Les listes de valeurs d'états obsolètes sont remplacées par « setObject () » (Repository Checker S5054)\nLes erreurs liées au marquage des appareils en cas de perte de connexion sont enregistrées au lieu d'être avalées",
+        "it": "Le liste di stati obsolete sono sostituite senza `setObject () `(Repository Checker S5054)\nGli errori nel contrassegnare i dispositivi come non connessi dopo una perdita vengono loggati",
+        "es": "Las listas de valores de estados anticuadas se sustituyen por `setObject () `(comprobador de repositorios S5054)\nLos errores al marcar los dispositivos como no conectados tras una pérdida de conexión se registran en lugar de tragarlos",
+        "pl": "Nieaktualne listy wartości stanów są zastępowane bez `setObject () `(sprawdzacz repozytorium S5054)\nBłędy podczas oznaczania urządzeń jako niepodłączonych po utracie połączenia są rejestrowane zamiast połknąć",
+        "uk": "Застарілі списки значень станів замінюються без `setObject () `(перевірка сховища S5054)\nПомилки під час позначення пристроїв як непідключених після втраченого з'єднання реєструються замість того, щоб їх ковтати",
+        "zh-cn": "过时的状态值列表会在没有 `setObject () `的情况下被替换（存储库检查器 S5054）\n连接中断后将设备标记为未连接时出错，而不是被吞没"
+      },
       "0.1.5": {
         "en": "Devices that are offline at adapter start also get the updated objects (`media.repeat` as number, `info.client` role) and their old repeat value is converted",
         "de": "Geräte, die beim Adapterstart offline sind, erhalten auch neue Objekte (`media.repeat` als Nummer, `info.client` Rolle) und ihr alter Wiederholwert wird konvertiert",

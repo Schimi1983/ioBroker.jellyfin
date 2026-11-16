@@ -149,7 +149,7 @@ Jellyfin is a free software project. This adapter is not affiliated with or endo
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.1.6 (2026-11-16)
 
 - (Schimi) Outdated value lists of states are replaced without `setObject()` (repository checker S5054)
 - (Schimi) Errors while marking devices as not connected after a lost connection are logged instead of being swallowed
@@ -172,11 +172,6 @@ Jellyfin is a free software project. This adapter is not affiliated with or endo
 ### 0.1.2 (2026-11-01)
 
 - (Schimi) Object names are now translated into all 11 admin languages
-
-### 0.1.1 (2026-10-31)
-
-- (Schimi) Releases are now published by GitHub Actions (trusted publishing with provenance)
-- (Schimi) Removed the news entry of the unpublished version 0.0.1
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
