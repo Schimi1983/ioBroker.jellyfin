@@ -149,6 +149,11 @@ Jellyfin is a free software project. This adapter is not affiliated with or endo
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (Schimi) Outdated value lists of states are replaced without `setObject()` (repository checker S5054)
+- (Schimi) Errors while marking devices as not connected after a lost connection are logged instead of being swallowed
+
 ### 0.1.5 (2026-11-12)
 
 - (Schimi) Devices that are offline at adapter start also get the updated objects (`media.repeat` as number, `info.client` role) and their old repeat value is converted

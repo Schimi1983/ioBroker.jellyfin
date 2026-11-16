@@ -477,13 +477,14 @@ class Jellyfin extends utils.Adapter {
                 common.states &&
                 JSON.stringify(existing.common.states) !== JSON.stringify(common.states)
             ) {
-                // @KI_HINWEIS: extendObject merges common.states, so outdated keys would stay; replace them
-                // (common.custom, e.g. history settings, is kept).
-                const obj: ioBroker.StateObject = { ...existing, common: { ...existing.common, ...common } };
-                await this.setObject(stateId, obj);
-            } else {
-                await this.extendObject(stateId, { type: 'state', common, native: {} });
+                // @KI_HINWEIS: extendObject merges common.states, so outdated keys would stay. Clearing the
+                // property first makes the next extendObject write the new states as a whole
+                // (no full object rewrite, so common.custom, e.g. history settings, stays untouched).
+                await this.extendObject(stateId, {
+                    common: { states: null },
+                });
             }
+            await this.extendObject(stateId, { type: 'state', common, native: {} });
         }
         // `media.repeat` was a string with the Jellyfin names up to 0.1.3
         const repeat = await this.getStateAsync(`${id}.media.repeat`);
@@ -512,8 +513,12 @@ class Jellyfin extends utils.Adapter {
     private markAllOffline(): void {
         this.sessions.clear();
         void (async () => {
-            for (const id of this.knownDevices) {
-                await this.markOffline(id);
+            try {
+                for (const id of this.knownDevices) {
+                    await this.markOffline(id);
+                }
+            } catch (e) {
+                this.log.warn(`Marking devices as not connected failed: ${(e as Error).message}`);
             }
         })();
     }

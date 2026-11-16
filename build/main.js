@@ -446,11 +446,11 @@ class Jellyfin extends utils.Adapter {
       const common = (0, import_objects.toCommon)(def);
       const existing = await this.getObjectAsync(stateId);
       if ((existing == null ? void 0 : existing.type) === "state" && common.states && JSON.stringify(existing.common.states) !== JSON.stringify(common.states)) {
-        const obj = { ...existing, common: { ...existing.common, ...common } };
-        await this.setObject(stateId, obj);
-      } else {
-        await this.extendObject(stateId, { type: "state", common, native: {} });
+        await this.extendObject(stateId, {
+          common: { states: null }
+        });
       }
+      await this.extendObject(stateId, { type: "state", common, native: {} });
     }
     const repeat = await this.getStateAsync(`${id}.media.repeat`);
     if (repeat && typeof repeat.val === "string") {
@@ -476,8 +476,12 @@ class Jellyfin extends utils.Adapter {
   markAllOffline() {
     this.sessions.clear();
     void (async () => {
-      for (const id of this.knownDevices) {
-        await this.markOffline(id);
+      try {
+        for (const id of this.knownDevices) {
+          await this.markOffline(id);
+        }
+      } catch (e) {
+        this.log.warn(`Marking devices as not connected failed: ${e.message}`);
       }
     })();
   }
