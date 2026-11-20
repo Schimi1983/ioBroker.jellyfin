@@ -9,6 +9,7 @@ import { DEVICE_CHANNELS, DEVICE_STATES, REPEAT_MODES, SERVER_STATES, toCommon }
 import { tr } from './lib/names';
 import { parseGeneralCommand, parseMessage, type MessagePayload } from './lib/commands';
 import { checkCommand, reportsAudio, sessionValues, type CommandKind } from './lib/session';
+import { progressValues, updateProgress, type Progress } from './lib/progress';
 import type { ItemInfo, PlaystateCommand, RepeatMode, SessionInfo, SocketMessage, SystemInfo } from './lib/types';
 
 /** DeviceId prefix of all ioBroker connections (`ioBroker-jellyfin.0`, …); filtered out of the device list. */
@@ -20,6 +21,8 @@ const RECONNECT_MIN_MS = 5_000;
 const RECONNECT_MAX_MS = 60_000;
 /** Server info (update available, restart pending) is refreshed in this interval. */
 const SERVER_INFO_INTERVAL_MS = 10 * 60_000;
+/** Interval in which the elapsed time of playing devices is counted on. */
+const PROGRESS_INTERVAL_MS = 1_000;
 
 /** Playstate buttons: state id below the device → Jellyfin command. */
 const PLAYSTATE_BUTTONS: Record<string, PlaystateCommand> = {
@@ -72,6 +75,9 @@ class Jellyfin extends utils.Adapter {
     private valueCache = new Map<string, ioBroker.StateValue>();
     /** Sessions waiting for processing (only the latest push is kept). */
     private pendingSessions: SessionInfo[] | null = null;
+    /** Playback position per playing device (counted on between the server reports). */
+    private progress = new Map<string, Progress>();
+    private progressTimer: ioBroker.Interval | undefined;
     private processing = false;
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
@@ -406,6 +412,7 @@ class Jellyfin extends utils.Adapter {
         }
 
         const opts = { baseUrl: this.api?.baseUrl ?? '', coverHeight: this.coverHeight };
+        const now = Date.now();
         let playing = 0;
         // @KI_HINWEIS: set before the states are written – a device whose states are visible must also accept commands.
         this.sessions = current;
@@ -415,10 +422,24 @@ class Jellyfin extends utils.Adapter {
             if (s.NowPlayingItem) {
                 playing++;
             }
-            for (const [key, val] of Object.entries(sessionValues(s, opts))) {
+            const values = sessionValues(s, opts);
+            const progress = updateProgress(this.progress.get(id), s, now);
+            if (progress) {
+                this.progress.set(id, progress);
+                Object.assign(values, progressValues(progress, now));
+            } else {
+                this.progress.delete(id);
+            }
+            for (const [key, val] of Object.entries(values)) {
                 await this.writeValue(`${id}.${key}`, val);
             }
         }
+        for (const id of this.progress.keys()) {
+            if (!current.has(id)) {
+                this.progress.delete(id);
+            }
+        }
+        this.updateProgressTimer();
 
         for (const id of this.knownDevices) {
             if (!current.has(id)) {
@@ -509,9 +530,41 @@ class Jellyfin extends utils.Adapter {
         await this.writeValue(`${id}.media.state`, 'stop');
     }
 
+    /** Starts the progress timer while a device is playing and stops it otherwise. */
+    private updateProgressTimer(): void {
+        const running = [...this.progress.values()].some(p => p.running);
+        if (running && !this.progressTimer) {
+            this.progressTimer = this.setInterval(() => void this.tickProgress(), PROGRESS_INTERVAL_MS);
+        } else if (!running && this.progressTimer) {
+            this.clearInterval(this.progressTimer);
+            this.progressTimer = undefined;
+        }
+    }
+
+    // @KI_HINWEIS: Jellyfin reports the position only every few seconds (some clients much less often), so a
+    //     player widget would jump. Between the reports the adapter counts on locally; writeValue skips unchanged values.
+    /** Writes the counted-on elapsed time of all playing devices. */
+    private async tickProgress(): Promise<void> {
+        const now = Date.now();
+        try {
+            for (const [id, p] of this.progress) {
+                if (!p.running) {
+                    continue;
+                }
+                for (const [key, val] of Object.entries(progressValues(p, now))) {
+                    await this.writeValue(`${id}.${key}`, val);
+                }
+            }
+        } catch (e) {
+            this.log.debug(`Updating the elapsed time failed: ${(e as Error).message}`);
+        }
+    }
+
     /** Marks all devices as not connected (connection to the server lost). */
     private markAllOffline(): void {
         this.sessions.clear();
+        this.progress.clear();
+        this.updateProgressTimer();
         void (async () => {
             try {
                 for (const id of this.knownDevices) {
@@ -877,6 +930,9 @@ class Jellyfin extends utils.Adapter {
             }
             if (this.serverInfoTimer) {
                 this.clearInterval(this.serverInfoTimer);
+            }
+            if (this.progressTimer) {
+                this.clearInterval(this.progressTimer);
             }
             if (this.socket) {
                 this.sendSocket({ MessageType: 'SessionsStop' });

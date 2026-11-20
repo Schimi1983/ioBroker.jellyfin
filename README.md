@@ -149,6 +149,10 @@ Jellyfin is a free software project. This adapter is not affiliated with or endo
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (Schimi1983) The elapsed time (`media.elapsed`, `media.seek`) now counts on every second while playing, instead of jumping with each report of the server
+
 ### 0.1.6 (2026-11-16)
 
 - (Schimi) Outdated value lists of states are replaced without `setObject()` (repository checker S5054)

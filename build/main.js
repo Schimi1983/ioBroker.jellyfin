@@ -28,11 +28,13 @@ var import_objects = require("./lib/objects");
 var import_names = require("./lib/names");
 var import_commands = require("./lib/commands");
 var import_session = require("./lib/session");
+var import_progress = require("./lib/progress");
 const OWN_DEVICE_PREFIX = "ioBroker-";
 const MIN_SERVER_MAJOR = 12;
 const RECONNECT_MIN_MS = 5e3;
 const RECONNECT_MAX_MS = 6e4;
 const SERVER_INFO_INTERVAL_MS = 10 * 6e4;
+const PROGRESS_INTERVAL_MS = 1e3;
 const PLAYSTATE_BUTTONS = {
   "command.play": "Unpause",
   "command.pause": "Pause",
@@ -79,6 +81,9 @@ class Jellyfin extends utils.Adapter {
   valueCache = /* @__PURE__ */ new Map();
   /** Sessions waiting for processing (only the latest push is kept). */
   pendingSessions = null;
+  /** Playback position per playing device (counted on between the server reports). */
+  progress = /* @__PURE__ */ new Map();
+  progressTimer;
   processing = false;
   constructor(options = {}) {
     super({ ...options, name: "jellyfin" });
@@ -383,6 +388,7 @@ class Jellyfin extends utils.Adapter {
       current.set(dev.id, dev.view);
     }
     const opts = { baseUrl: (_b = (_a = this.api) == null ? void 0 : _a.baseUrl) != null ? _b : "", coverHeight: this.coverHeight };
+    const now = Date.now();
     let playing = 0;
     this.sessions = current;
     for (const [id, s] of current) {
@@ -391,10 +397,24 @@ class Jellyfin extends utils.Adapter {
       if (s.NowPlayingItem) {
         playing++;
       }
-      for (const [key, val] of Object.entries((0, import_session.sessionValues)(s, opts))) {
+      const values = (0, import_session.sessionValues)(s, opts);
+      const progress = (0, import_progress.updateProgress)(this.progress.get(id), s, now);
+      if (progress) {
+        this.progress.set(id, progress);
+        Object.assign(values, (0, import_progress.progressValues)(progress, now));
+      } else {
+        this.progress.delete(id);
+      }
+      for (const [key, val] of Object.entries(values)) {
         await this.writeValue(`${id}.${key}`, val);
       }
     }
+    for (const id of this.progress.keys()) {
+      if (!current.has(id)) {
+        this.progress.delete(id);
+      }
+    }
+    this.updateProgressTimer();
     for (const id of this.knownDevices) {
       if (!current.has(id)) {
         await this.markOffline(id);
@@ -472,9 +492,39 @@ class Jellyfin extends utils.Adapter {
     await this.writeValue(`${id}.info.remoteControl`, false);
     await this.writeValue(`${id}.media.state`, "stop");
   }
+  /** Starts the progress timer while a device is playing and stops it otherwise. */
+  updateProgressTimer() {
+    const running = [...this.progress.values()].some((p) => p.running);
+    if (running && !this.progressTimer) {
+      this.progressTimer = this.setInterval(() => void this.tickProgress(), PROGRESS_INTERVAL_MS);
+    } else if (!running && this.progressTimer) {
+      this.clearInterval(this.progressTimer);
+      this.progressTimer = void 0;
+    }
+  }
+  // @KI_HINWEIS: Jellyfin reports the position only every few seconds (some clients much less often), so a
+  //     player widget would jump. Between the reports the adapter counts on locally; writeValue skips unchanged values.
+  /** Writes the counted-on elapsed time of all playing devices. */
+  async tickProgress() {
+    const now = Date.now();
+    try {
+      for (const [id, p] of this.progress) {
+        if (!p.running) {
+          continue;
+        }
+        for (const [key, val] of Object.entries((0, import_progress.progressValues)(p, now))) {
+          await this.writeValue(`${id}.${key}`, val);
+        }
+      }
+    } catch (e) {
+      this.log.debug(`Updating the elapsed time failed: ${e.message}`);
+    }
+  }
   /** Marks all devices as not connected (connection to the server lost). */
   markAllOffline() {
     this.sessions.clear();
+    this.progress.clear();
+    this.updateProgressTimer();
     void (async () => {
       try {
         for (const id of this.knownDevices) {
@@ -806,6 +856,9 @@ class Jellyfin extends utils.Adapter {
       }
       if (this.serverInfoTimer) {
         this.clearInterval(this.serverInfoTimer);
+      }
+      if (this.progressTimer) {
+        this.clearInterval(this.progressTimer);
       }
       if (this.socket) {
         this.sendSocket({ MessageType: "SessionsStop" });
