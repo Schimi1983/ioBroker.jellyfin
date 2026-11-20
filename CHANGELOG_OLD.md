@@ -1,4 +1,8 @@
 # Older changes
+## 0.1.2 (2026-11-01)
+
+- (Schimi) Object names are now translated into all 11 admin languages
+
 ## 0.1.1 (2026-10-31)
 
 - (Schimi) Releases are now published by GitHub Actions (trusted publishing with provenance)

@@ -149,7 +149,7 @@ Jellyfin is a free software project. This adapter is not affiliated with or endo
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.1.7 (2026-11-20)
 
 - (Schimi1983) The elapsed time (`media.elapsed`, `media.seek`) now counts on every second while playing, instead of jumping with each report of the server
 
@@ -172,10 +172,6 @@ Jellyfin is a free software project. This adapter is not affiliated with or endo
 ### 0.1.3 (2026-11-01)
 
 - (Schimi) Existing installations also get the translated names of `info` and `info.connection`
-
-### 0.1.2 (2026-11-01)
-
-- (Schimi) Object names are now translated into all 11 admin languages
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

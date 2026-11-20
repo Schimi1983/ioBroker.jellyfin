@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "jellyfin",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "news": {
+      "0.1.7": {
+        "en": "The elapsed time (`media.elapsed`, `media.seek`) now counts on every second while playing, instead of jumping with each report of the server",
+        "de": "Die verstrichene Zeit (`media.elapsed`, `media.seek`) zählt jetzt beim Spielen mit jeder Sekunde, statt mit jedem Serverbericht",
+        "ru": "Прошедшее время (`media.elapsed`, `media.seek`) теперь учитывается каждая секунда во время игры, а не перескакивает с каждым отчетом сервера",
+        "pt": "O tempo gasto (`media.elapsed`, `media.seek`) agora conta com cada segundo de jogo, em vez de pular com cada relatório do servidor",
+        "nl": "De verstreken tijd (`media.elapsed`, `media.seek`) telt nu op elke seconde tijdens het spelen, in plaats van bij elk rapport van de server te springen",
+        "fr": "Le temps écoulé (`media.elapsed`, `media.seek`) compte désormais par seconde pendant le jeu, au lieu de sauter à chaque rapport du serveur",
+        "it": "Il tempo trascorso (`media.elapsed`, `media.seek`) ora conta su ogni secondo di gioco, invece di saltare con ogni report del server",
+        "es": "El tiempo transcurrido (`media.elapsed`, `media.seek`) ahora cuenta con cada segundo de juego, en lugar de saltar con cada informe del servidor",
+        "pl": "Czas, który upłynął (`media.elapsed`, `media.seek`) liczy się teraz na każdą sekundę podczas gry, zamiast skakać z każdym raportem serwera",
+        "uk": "Час, що минув (`media.elapsed`, `media.seek`) тепер розраховує на кожну секунду під час гри, замість того, щоб стрибати з кожним звітом сервера",
+        "zh-cn": "经过的时间（`media.elapsed`、`media.seek`）现在计入游戏时的每秒钟，而不是随服务器的每份报告一起跳转"
+      },
       "0.1.6": {
         "en": "Outdated value lists of states are replaced without `setObject()` (repository checker S5054)\nErrors while marking devices as not connected after a lost connection are logged instead of being swallowed",
         "de": "Veraltete Statuslisten werden durch `setObject () `ersetzt (Repository-Checker S5054)\nFehler beim Markieren von Geräten nach Verbindungsverlust werden geloggt statt verschluckt",
@@ -80,19 +93,6 @@
         "pl": "Wydania są teraz publikowane przez GitHub Actions (zaufane publikowanie z pochodzeniem)\nUsunięto wpis wiadomości nieopublikowanej wersji 0.0.1",
         "uk": "Релізи тепер публікуються GitHub Actions (довірена публікація з походженням)\nВилучено запис новин неопублікованої версії 0.0.1",
         "zh-cn": "版本现在由 GitHub Actions 发布（有来源的可信发布）\n删除了未发布版本 0.0.1 的新闻条目"
-      },
-      "0.1.0": {
-        "en": "Initial release: playback status, cover, remote control, start by title, messages and library scan for Jellyfin 12",
-        "de": "Erste Version: Wiedergabestatus, Cover, Fernbedienung, Titel, Nachrichten und Lesescan für Jellyfin 12",
-        "ru": "Первоначальная версия: статус воспроизведения, обложка, пульт дистанционного управления, запуск по заголовку, сообщения и сканирование библиотеки для Jellyfin 12",
-        "pt": "Versão inicial: status de reprodução, capa, controle remoto, título, mensagens e leitura do Jellyfin 12",
-        "nl": "Eerste release: afspeelstatus, cover, afstandsbediening, begin op titel, berichten en bibliotheekscan voor Jellyfin 12",
-        "fr": "Sortie initiale : état de lecture, pochette, télécommande, démarrage par titre, messages et scan de la bibliothèque pour Jellyfin 12",
-        "it": "Versione iniziale: stato di riproduzione, cover, telecomando, titolo, messaggi e scansione di Jellyfin 12",
-        "es": "Versión inicial: estado de reproducción, portada, control remoto, inicio por título, mensajes y escaneo de biblioteca para Jellyfin 12",
-        "pl": "Pierwsze wydanie: stan odtwarzania, okładka, pilot zdalnego sterowania, początek od tytułu, wiadomości i skanowanie biblioteki pod kątem Jellyfin 12",
-        "uk": "Початковий випуск: статус відтворення, обкладинка, пульт дистанційного керування, початок за назвою, повідомлення та сканування бібліотеки для Jellyfin 12",
-        "zh-cn": "首次发布：Jellyfin 12 的播放状态、封面、遥控器、标题、消息和库扫描"
       }
     },
     "titleLang": {
