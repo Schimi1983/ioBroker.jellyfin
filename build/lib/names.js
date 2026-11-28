@@ -467,6 +467,45 @@ const LIST = [
     "\u6309\u6807\u9898\uFF08\u6216 ID\uFF09\u64AD\u653E\u7535\u5F71\u3001\u5267\u96C6\u6216\u6B4C\u66F2"
   ),
   t(
+    "Play a playlist (name or id)",
+    "Playlist abspielen (Name oder ID)",
+    "\u0412\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u0435\u0441\u0442\u0438 \u043F\u043B\u0435\u0439\u043B\u0438\u0441\u0442 (\u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0438\u043B\u0438 ID)",
+    "Reproduzir uma playlist (nome ou ID)",
+    "Een afspeellijst afspelen (naam of id)",
+    "Lire une playlist (nom ou ID)",
+    "Riproduci una playlist (nome o ID)",
+    "Reproducir una lista de reproducci\xF3n (nombre o ID)",
+    "Odtw\xF3rz playlist\u0119 (nazwa lub ID)",
+    "\u0412\u0456\u0434\u0442\u0432\u043E\u0440\u0438\u0442\u0438 \u043F\u043B\u0435\u0439\u043B\u0438\u0441\u0442 (\u043D\u0430\u0437\u0432\u0430 \u0430\u0431\u043E ID)",
+    "\u64AD\u653E\u64AD\u653E\u5217\u8868\uFF08\u540D\u79F0\u6216 ID\uFF09"
+  ),
+  t(
+    "Play a playlist, album, artist or series in random order (name or id)",
+    "Playlist, Album, Interpret oder Serie in zuf\xE4lliger Reihenfolge abspielen (Name oder ID)",
+    "\u0412\u043E\u0441\u043F\u0440\u043E\u0438\u0437\u0432\u0435\u0441\u0442\u0438 \u043F\u043B\u0435\u0439\u043B\u0438\u0441\u0442, \u0430\u043B\u044C\u0431\u043E\u043C, \u0438\u0441\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044F \u0438\u043B\u0438 \u0441\u0435\u0440\u0438\u0430\u043B \u0432 \u0441\u043B\u0443\u0447\u0430\u0439\u043D\u043E\u043C \u043F\u043E\u0440\u044F\u0434\u043A\u0435 (\u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435 \u0438\u043B\u0438 ID)",
+    "Reproduzir uma playlist, \xE1lbum, artista ou s\xE9rie em ordem aleat\xF3ria (nome ou ID)",
+    "Een afspeellijst, album, artiest of serie in willekeurige volgorde afspelen (naam of id)",
+    "Lire une playlist, un album, un artiste ou une s\xE9rie dans un ordre al\xE9atoire (nom ou ID)",
+    "Riproduci una playlist, un album, un artista o una serie in ordine casuale (nome o ID)",
+    "Reproducir una lista, \xE1lbum, artista o serie en orden aleatorio (nombre o ID)",
+    "Odtw\xF3rz playlist\u0119, album, wykonawc\u0119 lub serial w losowej kolejno\u015Bci (nazwa lub ID)",
+    "\u0412\u0456\u0434\u0442\u0432\u043E\u0440\u0438\u0442\u0438 \u043F\u043B\u0435\u0439\u043B\u0438\u0441\u0442, \u0430\u043B\u044C\u0431\u043E\u043C, \u0432\u0438\u043A\u043E\u043D\u0430\u0432\u0446\u044F \u0430\u0431\u043E \u0441\u0435\u0440\u0456\u0430\u043B \u0443 \u0432\u0438\u043F\u0430\u0434\u043A\u043E\u0432\u043E\u043C\u0443 \u043F\u043E\u0440\u044F\u0434\u043A\u0443 (\u043D\u0430\u0437\u0432\u0430 \u0430\u0431\u043E ID)",
+    "\u968F\u673A\u64AD\u653E\u64AD\u653E\u5217\u8868\u3001\u4E13\u8F91\u3001\u827A\u672F\u5BB6\u6216\u5267\u96C6\uFF08\u540D\u79F0\u6216 ID\uFF09"
+  ),
+  t(
+    "Playlists (JSON list with id, name and number of entries)",
+    "Playlists (JSON-Liste mit ID, Name und Anzahl der Eintr\xE4ge)",
+    "\u041F\u043B\u0435\u0439\u043B\u0438\u0441\u0442\u044B (\u0441\u043F\u0438\u0441\u043E\u043A JSON \u0441 ID, \u043D\u0430\u0437\u0432\u0430\u043D\u0438\u0435\u043C \u0438 \u0447\u0438\u0441\u043B\u043E\u043C \u0437\u0430\u043F\u0438\u0441\u0435\u0439)",
+    "Playlists (lista JSON com ID, nome e n\xFAmero de entradas)",
+    "Afspeellijsten (JSON-lijst met id, naam en aantal items)",
+    "Playlists (liste JSON avec ID, nom et nombre d'entr\xE9es)",
+    "Playlist (elenco JSON con ID, nome e numero di voci)",
+    "Listas de reproducci\xF3n (lista JSON con ID, nombre y n\xFAmero de entradas)",
+    "Playlisty (lista JSON z ID, nazw\u0105 i liczb\u0105 pozycji)",
+    "\u041F\u043B\u0435\u0439\u043B\u0438\u0441\u0442\u0438 (\u0441\u043F\u0438\u0441\u043E\u043A JSON \u0437 ID, \u043D\u0430\u0437\u0432\u043E\u044E \u0442\u0430 \u043A\u0456\u043B\u044C\u043A\u0456\u0441\u0442\u044E \u0437\u0430\u043F\u0438\u0441\u0456\u0432)",
+    "\u64AD\u653E\u5217\u8868\uFF08\u5305\u542B ID\u3001\u540D\u79F0\u548C\u6761\u76EE\u6570\u7684 JSON \u5217\u8868\uFF09"
+  ),
+  t(
     "Show message on the screen",
     "Meldung auf dem Bildschirm anzeigen",
     "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0441\u043E\u043E\u0431\u0449\u0435\u043D\u0438\u0435 \u043D\u0430 \u044D\u043A\u0440\u0430\u043D\u0435",

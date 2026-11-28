@@ -88,4 +88,12 @@ export interface ItemInfo {
     ParentIndexNumber?: number;
     IndexNumber?: number;
     ProductionYear?: number;
+    /** number of entries (playlists, albums) */
+    ChildCount?: number;
+}
+
+/** Entry of GET /Users. */
+export interface UserInfo {
+    Id: string;
+    Name?: string;
 }

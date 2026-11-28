@@ -1,4 +1,9 @@
-import type { ItemInfo, PlaystateCommand, RepeatMode, SessionInfo, SystemInfo } from './types';
+import type { ItemInfo, PlaystateCommand, RepeatMode, SessionInfo, SystemInfo, UserInfo } from './types';
+
+/** Item types searched by {@link JellyfinApi.findItem} by default. */
+export const SEARCH_TYPES = 'Movie,Series,Episode,Audio,MusicAlbum,MusicVideo,Video,Playlist';
+/** Item types that can be played shuffled (collections of entries). */
+export const SHUFFLE_TYPES = 'Playlist,MusicAlbum,MusicArtist,Series,Season,BoxSet';
 
 /** Error for every non-2xx answer of the Jellyfin server. */
 export class JellyfinHttpError extends Error {
@@ -201,12 +206,13 @@ export class JellyfinApi {
      *
      * @param term - search text
      * @param userId - user of the session (library permissions of this user apply)
+     * @param types - item types to search (default: films, series, episodes, music, videos, playlists)
      * @returns best match or `undefined`
      */
-    public async findItem(term: string, userId?: string): Promise<ItemInfo | undefined> {
+    public async findItem(term: string, userId?: string, types = SEARCH_TYPES): Promise<ItemInfo | undefined> {
         const q = new URLSearchParams({
             searchTerm: term,
-            includeItemTypes: 'Movie,Series,Episode,Audio,MusicAlbum,MusicVideo,Video',
+            includeItemTypes: types,
             recursive: 'true',
             limit: '10',
         });
@@ -220,14 +226,41 @@ export class JellyfinApi {
         return items.find(i => (i.Name ?? '').toLowerCase() === lower) ?? items[0];
     }
 
+    /** GET /Users – all users of the server (needs an API key with admin rights, which API keys have). */
+    public async getUsers(): Promise<UserInfo[]> {
+        const list = await this.request<UserInfo[]>('GET', '/Users');
+        return Array.isArray(list) ? list.filter(u => !!u?.Id) : [];
+    }
+
     /**
-     * POST /Sessions/{id}/Playing – starts playback of items on a client ("PlayNow").
+     * Playlists of one user.
+     *
+     * @param userId - user id
+     */
+    public async getPlaylists(userId: string): Promise<ItemInfo[]> {
+        const q = new URLSearchParams({
+            userId,
+            includeItemTypes: 'Playlist',
+            recursive: 'true',
+            sortBy: 'SortName',
+            fields: 'ChildCount',
+        });
+        const res = await this.request<{ Items?: ItemInfo[] }>('GET', `/Items?${q.toString()}`);
+        return res?.Items ?? [];
+    }
+
+    // @KI_HINWEIS: the server expands playlists, albums, artists and series to their entries itself
+    //     (SessionManager.SendPlayCommand) and shuffles them for `PlayShuffle` - this also works for clients
+    //     without a shuffle function of their own, e.g. DLNA renderers.
+    /**
+     * POST /Sessions/{id}/Playing – starts playback of items on a client ("PlayNow" or "PlayShuffle").
      *
      * @param sessionId - Jellyfin session id
      * @param itemIds - ids of the items to play
+     * @param shuffle - play in random order
      */
-    public async playNow(sessionId: string, itemIds: string[]): Promise<void> {
-        const q = new URLSearchParams({ playCommand: 'PlayNow', itemIds: itemIds.join(',') });
+    public async playNow(sessionId: string, itemIds: string[], shuffle = false): Promise<void> {
+        const q = new URLSearchParams({ playCommand: shuffle ? 'PlayShuffle' : 'PlayNow', itemIds: itemIds.join(',') });
         await this.request('POST', `/Sessions/${encodeURIComponent(sessionId)}/Playing?${q.toString()}`);
     }
 

@@ -177,6 +177,24 @@ const DEVICE_STATES = [
     def: ""
   },
   {
+    id: "command.playPlaylist",
+    name: "Play a playlist (name or id)",
+    type: "string",
+    role: "text",
+    read: true,
+    write: true,
+    def: ""
+  },
+  {
+    id: "command.playShuffled",
+    name: "Play a playlist, album, artist or series in random order (name or id)",
+    type: "string",
+    role: "text",
+    read: true,
+    write: true,
+    def: ""
+  },
+  {
     id: "command.message",
     name: "Show message on the screen",
     type: "string",
@@ -233,6 +251,15 @@ const SERVER_STATES = [
     read: true,
     write: false,
     def: 0
+  },
+  {
+    id: "server.playlists",
+    name: "Playlists (JSON list with id, name and number of entries)",
+    type: "string",
+    role: "json",
+    read: true,
+    write: false,
+    def: "[]"
   },
   button("server.refreshLibrary", "Scan all libraries", "button")
 ];

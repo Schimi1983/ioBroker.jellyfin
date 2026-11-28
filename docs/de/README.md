@@ -34,18 +34,19 @@ Jedes Gerät hat drei Ordner:
 |---|---|
 | `info` | Gerätename, App, Benutzer, ob es verbunden ist und ob es sich steuern lässt |
 | `media` | Was läuft: `state` (play / pause / stop), `title`, `series`, `season`, `episode`, `cover`, `elapsed`, `duration`, dazu `seek`, `volume`, `mute` |
-| `command` | Tasten: `play`, `pause`, `playPause`, `stop`, `next`, `previous`, `forward`, `rewind`, `volumeUp`, `volumeDown`, `toggleMute`, `playTitle` und `message` |
+| `command` | Tasten: `play`, `pause`, `playPause`, `stop`, `next`, `previous`, `forward`, `rewind`, `volumeUp`, `volumeDown`, `toggleMute`, `playTitle`, `playPlaylist`, `playShuffled` und `message` |
 
 **Beispiele**
 
 - **Licht dimmen, wenn ein Film startet:** auf `jellyfin.0.<gerät>.media.state` = `play` reagieren.
 - **Film starten:** Titel in `jellyfin.0.<gerät>.command.playTitle` schreiben, z. B. `Kevin - Allein zu Haus`.
+- **Playlist starten:** in `jellyfin.0.<gerät>.command.playPlaylist` auswählen (die Liste enthält alle Playlists des Servers) – oder den Namen in `command.playShuffled` schreiben, dann läuft sie in zufälliger Reihenfolge. Das klappt auch mit Lautsprechern, die über DLNA angebunden sind.
 - **Pause, wenn es klingelt:** `jellyfin.0.<gerät>.command.pause` auf `true` setzen.
 - **Meldung auf dem Fernseher:** Text in `jellyfin.0.<gerät>.command.message` schreiben.
 - **Cover in VIS:** `jellyfin.0.<gerät>.media.cover` als Bildadresse verwenden.
 - **In die Mitte springen:** `50` in `media.seek` schreiben (Prozent des Films).
 
-Unter `jellyfin.0.server` stehen Server-Version, ob ein Update oder Neustart ansteht, wie viele Geräte verbunden sind und abspielen, und die Taste `refreshLibrary` zum Einlesen aller Bibliotheken.
+Unter `jellyfin.0.server` stehen Server-Version, ob ein Update oder Neustart ansteht, wie viele Geräte verbunden sind und abspielen, alle Playlists (`playlists`) und die Taste `refreshLibrary` zum Einlesen aller Bibliotheken.
 
 ## Gut zu wissen
 

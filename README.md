@@ -43,18 +43,19 @@ Each device has three folders:
 |---|---|
 | `info` | Name of the device, app, user, whether it is connected and whether it can be controlled |
 | `media` | What is playing: `state` (play / pause / stop), `title`, `series`, `season`, `episode`, `cover`, `elapsed`, `duration`, and `seek`, `volume`, `mute` |
-| `command` | Buttons: `play`, `pause`, `playPause`, `stop`, `next`, `previous`, `forward`, `rewind`, `volumeUp`, `volumeDown`, `toggleMute`, `playTitle` and `message` |
+| `command` | Buttons: `play`, `pause`, `playPause`, `stop`, `next`, `previous`, `forward`, `rewind`, `volumeUp`, `volumeDown`, `toggleMute`, `playTitle`, `playPlaylist`, `playShuffled` and `message` |
 
 **Examples**
 
 - **Dim the light when a film starts:** react to `jellyfin.0.<device>.media.state` changing to `play`.
 - **Start a film:** write its title into `jellyfin.0.<device>.command.playTitle`, e.g. `Home Alone`.
+- **Start a playlist:** choose it in `jellyfin.0.<device>.command.playPlaylist` (the list offers all playlists of the server), or write its name into `command.playShuffled` to hear it in random order. This also works for speakers connected via DLNA.
 - **Pause when the doorbell rings:** set `jellyfin.0.<device>.command.pause` to `true`.
 - **Message on the TV:** write the text into `jellyfin.0.<device>.command.message`.
 - **Cover in VIS:** use `jellyfin.0.<device>.media.cover` as image address.
 - **Jump to the middle:** write `50` into `media.seek` (percent of the film).
 
-Below `jellyfin.0.server` you see the server version, whether an update or restart is pending, how many devices are connected and playing, and the button `refreshLibrary` to scan all libraries.
+Below `jellyfin.0.server` you see the server version, whether an update or restart is pending, how many devices are connected and playing, all playlists (`playlists`), and the button `refreshLibrary` to scan all libraries.
 
 ## Good to know
 
@@ -108,6 +109,8 @@ Below `jellyfin.0.server` you see the server version, whether an update or resta
 | `media.itemId` | string | read | Jellyfin id of the current item |
 | `command.*` | boolean | write | buttons |
 | `command.playTitle` | string | read/write | title (search, exact match preferred; a series starts with its first episode) or Jellyfin item id |
+| `command.playPlaylist` | string | read/write | name or id of a playlist (the value list contains all playlists, refreshed every 10 minutes) |
+| `command.playShuffled` | string | read/write | name or id of a playlist, album, artist or series – played in random order |
 | `command.message` | string | read/write | text or JSON `{"text":"…","header":"…","timeoutMs":5000}` |
 | `command.generalCommand` | string | read/write | any Jellyfin command, e.g. `GoHome` or `{"Name":"SetVolume","Arguments":{"Volume":"30"}}` |
 
@@ -151,6 +154,7 @@ Jellyfin is a free software project. This adapter is not affiliated with or endo
 -->
 ### **WORK IN PROGRESS**
 
+- (Schimi1983) Start playlists: `command.playPlaylist` (with a selection list of all playlists), `command.playShuffled` (playlist, album, artist or series in random order) and `server.playlists`; `command.playTitle` also finds playlists (#8)
 - (Schimi1983) With log level "debug" the adapter logs what Jellyfin reports for each device (play/pause, position, volume, mute) whenever it changes - helps to find out whether a wrong state comes from Jellyfin or from the adapter
 
 ### 0.1.7 (2026-11-20)

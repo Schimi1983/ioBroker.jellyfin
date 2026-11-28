@@ -20,9 +20,13 @@ var api_exports = {};
 __export(api_exports, {
   JellyfinApi: () => JellyfinApi,
   JellyfinHttpError: () => JellyfinHttpError,
+  SEARCH_TYPES: () => SEARCH_TYPES,
+  SHUFFLE_TYPES: () => SHUFFLE_TYPES,
   normalizeBaseUrl: () => normalizeBaseUrl
 });
 module.exports = __toCommonJS(api_exports);
+const SEARCH_TYPES = "Movie,Series,Episode,Audio,MusicAlbum,MusicVideo,Video,Playlist";
+const SHUFFLE_TYPES = "Playlist,MusicAlbum,MusicArtist,Series,Season,BoxSet";
 class JellyfinHttpError extends Error {
   /**
    * @param status - HTTP status code (0 = network error / timeout)
@@ -185,13 +189,14 @@ class JellyfinApi {
    *
    * @param term - search text
    * @param userId - user of the session (library permissions of this user apply)
+   * @param types - item types to search (default: films, series, episodes, music, videos, playlists)
    * @returns best match or `undefined`
    */
-  async findItem(term, userId) {
+  async findItem(term, userId, types = SEARCH_TYPES) {
     var _a, _b;
     const q = new URLSearchParams({
       searchTerm: term,
-      includeItemTypes: "Movie,Series,Episode,Audio,MusicAlbum,MusicVideo,Video",
+      includeItemTypes: types,
       recursive: "true",
       limit: "10"
     });
@@ -206,14 +211,40 @@ class JellyfinApi {
       return ((_a2 = i.Name) != null ? _a2 : "").toLowerCase() === lower;
     })) != null ? _b : items[0];
   }
+  /** GET /Users – all users of the server (needs an API key with admin rights, which API keys have). */
+  async getUsers() {
+    const list = await this.request("GET", "/Users");
+    return Array.isArray(list) ? list.filter((u) => !!(u == null ? void 0 : u.Id)) : [];
+  }
   /**
-   * POST /Sessions/{id}/Playing – starts playback of items on a client ("PlayNow").
+   * Playlists of one user.
+   *
+   * @param userId - user id
+   */
+  async getPlaylists(userId) {
+    var _a;
+    const q = new URLSearchParams({
+      userId,
+      includeItemTypes: "Playlist",
+      recursive: "true",
+      sortBy: "SortName",
+      fields: "ChildCount"
+    });
+    const res = await this.request("GET", `/Items?${q.toString()}`);
+    return (_a = res == null ? void 0 : res.Items) != null ? _a : [];
+  }
+  // @KI_HINWEIS: the server expands playlists, albums, artists and series to their entries itself
+  //     (SessionManager.SendPlayCommand) and shuffles them for `PlayShuffle` - this also works for clients
+  //     without a shuffle function of their own, e.g. DLNA renderers.
+  /**
+   * POST /Sessions/{id}/Playing – starts playback of items on a client ("PlayNow" or "PlayShuffle").
    *
    * @param sessionId - Jellyfin session id
    * @param itemIds - ids of the items to play
+   * @param shuffle - play in random order
    */
-  async playNow(sessionId, itemIds) {
-    const q = new URLSearchParams({ playCommand: "PlayNow", itemIds: itemIds.join(",") });
+  async playNow(sessionId, itemIds, shuffle = false) {
+    const q = new URLSearchParams({ playCommand: shuffle ? "PlayShuffle" : "PlayNow", itemIds: itemIds.join(",") });
     await this.request("POST", `/Sessions/${encodeURIComponent(sessionId)}/Playing?${q.toString()}`);
   }
   /** POST /Library/Refresh – starts a library scan (returns immediately). */
@@ -225,6 +256,8 @@ class JellyfinApi {
 0 && (module.exports = {
   JellyfinApi,
   JellyfinHttpError,
+  SEARCH_TYPES,
+  SHUFFLE_TYPES,
   normalizeBaseUrl
 });
 //# sourceMappingURL=api.js.map

@@ -23,6 +23,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var utils = __toESM(require("@iobroker/adapter-core"));
 var import_api = require("./lib/api");
+var import_playlists = require("./lib/playlists");
 var import_devices = require("./lib/devices");
 var import_objects = require("./lib/objects");
 var import_names = require("./lib/names");
@@ -86,6 +87,10 @@ class Jellyfin extends utils.Adapter {
   progressTimer;
   /** Last logged report summary per device (debug log only when it changes). */
   lastReport = /* @__PURE__ */ new Map();
+  /** Playlists of all users (refreshed with the server info). */
+  playlists = [];
+  /** Value list of `command.playPlaylist` as written last (JSON), '' = not yet loaded. */
+  playlistStatesJson = "";
   processing = false;
   constructor(options = {}) {
     super({ ...options, name: "jellyfin" });
@@ -132,7 +137,10 @@ class Jellyfin extends utils.Adapter {
       this.subscribeStates(pattern);
     }
     this.subscribeStates("server.refreshLibrary");
-    this.serverInfoTimer = this.setInterval(() => void this.refreshServerInfo(false), SERVER_INFO_INTERVAL_MS);
+    this.serverInfoTimer = this.setInterval(() => {
+      void this.refreshServerInfo(false);
+      void this.refreshPlaylists();
+    }, SERVER_INFO_INTERVAL_MS);
     await this.connect();
   }
   // ---------------------------------------------------------------- connection
@@ -152,6 +160,52 @@ class Jellyfin extends utils.Adapter {
       this.log.debug(`Initial session list failed: ${e.message}`);
     }
     this.openSocket();
+    void this.refreshPlaylists();
+  }
+  /** Loads the playlists of all users, writes `server.playlists` and the selection list of `command.playPlaylist`. */
+  async refreshPlaylists() {
+    const api = this.api;
+    if (!api || this.stopping) {
+      return;
+    }
+    try {
+      const users = await api.getUsers();
+      const lists = [];
+      for (const user of users) {
+        lists.push(await api.getPlaylists(user.Id));
+      }
+      this.playlists = (0, import_playlists.mergePlaylists)(lists);
+    } catch (e) {
+      this.log.debug(`Loading the playlists failed: ${e.message}`);
+      return;
+    }
+    await this.writeValue("server.playlists", JSON.stringify(this.playlists));
+    const json = JSON.stringify((0, import_playlists.playlistStates)(this.playlists));
+    if (json !== this.playlistStatesJson) {
+      this.playlistStatesJson = json;
+      for (const id of this.knownDevices) {
+        await this.applyPlaylistStates(id);
+      }
+    }
+  }
+  /**
+   * Writes the playlists as value list of `command.playPlaylist` of one device (selection in VIS and admin).
+   *
+   * @param id - device object id
+   */
+  async applyPlaylistStates(id) {
+    if (!this.playlistStatesJson) {
+      return;
+    }
+    const stateId = `${id}.command.playPlaylist`;
+    try {
+      await this.extendObject(stateId, { common: { states: null } });
+      await this.extendObject(stateId, {
+        common: { states: JSON.parse(this.playlistStatesJson) }
+      });
+    } catch (e) {
+      this.log.debug(`Updating the playlist selection of ${id} failed: ${e.message}`);
+    }
   }
   /**
    * Reads /System/Info and writes the server states.
@@ -481,6 +535,7 @@ class Jellyfin extends utils.Adapter {
       }
       await this.extendObject(stateId, { type: "state", common, native: {} });
     }
+    await this.applyPlaylistStates(id);
     const repeat = await this.getStateAsync(`${id}.media.repeat`);
     if (repeat && typeof repeat.val === "string") {
       const idx = import_objects.REPEAT_MODES.findIndex((m) => m === repeat.val);
@@ -670,22 +725,28 @@ class Jellyfin extends utils.Adapter {
         await this.afterValueCommand(id, ok);
         return;
       }
-      case "command.playTitle": {
+      case "command.playTitle":
+      case "command.playPlaylist":
+      case "command.playShuffled": {
         const term = typeof state.val === "string" ? state.val.trim() : "";
         if (!term) {
           return;
         }
-        if (this.allowed(device, s, "PlayNow", { type: "playstate" })) {
+        const shuffle = key === "command.playShuffled";
+        const command = shuffle ? "PlayShuffle" : "PlayNow";
+        if (this.allowed(device, s, command, { type: "playstate" })) {
           await this.run(
             id,
-            "PlayNow",
+            command,
             async () => {
-              const item = /^[0-9a-f]{32}$/i.test(term) ? { Id: term, Name: term } : await api.findItem(term, s.UserId);
+              const item = await this.resolveItem(key, term, s.UserId);
               if (!item) {
                 throw new Error(`nothing found for "${term}"`);
               }
-              this.log.info(`${this.deviceName(device, s)}: playing "${itemLabel(item)}"`);
-              await api.playNow(s.Id, [item.Id]);
+              this.log.info(
+                `${this.deviceName(device, s)}: playing "${itemLabel(item)}"${shuffle ? " in random order" : ""}`
+              );
+              await api.playNow(s.Id, [item.Id], shuffle);
             },
             state.val
           );
@@ -810,6 +871,27 @@ class Jellyfin extends utils.Adapter {
    * @param device - device object id
    * @param s - session
    */
+  /**
+   * Finds the item for a play command: item id, a known playlist or a search on the server.
+   *
+   * @param key - command state (relative to the device)
+   * @param term - name or id written to the state
+   * @param userId - user of the session (library permissions of this user apply)
+   */
+  async resolveItem(key, term, userId) {
+    var _a;
+    if (/^[0-9a-f]{32}$/i.test(term)) {
+      return { Id: term, Name: term };
+    }
+    if (key !== "command.playTitle") {
+      const playlist = (0, import_playlists.findPlaylist)(this.playlists, term);
+      if (playlist) {
+        return { Id: playlist.id, Name: playlist.name, Type: "Playlist" };
+      }
+    }
+    const types = key === "command.playPlaylist" ? "Playlist" : key === "command.playShuffled" ? import_api.SHUFFLE_TYPES : void 0;
+    return (_a = this.api) == null ? void 0 : _a.findItem(term, userId, types);
+  }
   deviceName(device, s) {
     return (s == null ? void 0 : s.DeviceName) || this.preparedDevices.get(device) || device;
   }

@@ -3,7 +3,8 @@
  * Copyright (c) 2026 Schimi <github@world-mg.de>, MIT License
  */
 import * as utils from '@iobroker/adapter-core';
-import { JellyfinApi, JellyfinHttpError, normalizeBaseUrl } from './lib/api';
+import { JellyfinApi, JellyfinHttpError, normalizeBaseUrl, SHUFFLE_TYPES } from './lib/api';
+import { findPlaylist, mergePlaylists, playlistStates, type Playlist } from './lib/playlists';
 import { displayName, groupSessions } from './lib/devices';
 import { DEVICE_CHANNELS, DEVICE_STATES, REPEAT_MODES, SERVER_STATES, toCommon } from './lib/objects';
 import { tr } from './lib/names';
@@ -80,6 +81,10 @@ class Jellyfin extends utils.Adapter {
     private progressTimer: ioBroker.Interval | undefined;
     /** Last logged report summary per device (debug log only when it changes). */
     private lastReport = new Map<string, string>();
+    /** Playlists of all users (refreshed with the server info). */
+    private playlists: Playlist[] = [];
+    /** Value list of `command.playPlaylist` as written last (JSON), '' = not yet loaded. */
+    private playlistStatesJson = '';
     private processing = false;
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
@@ -135,7 +140,10 @@ class Jellyfin extends utils.Adapter {
         }
         this.subscribeStates('server.refreshLibrary');
 
-        this.serverInfoTimer = this.setInterval(() => void this.refreshServerInfo(false), SERVER_INFO_INTERVAL_MS);
+        this.serverInfoTimer = this.setInterval(() => {
+            void this.refreshServerInfo(false);
+            void this.refreshPlaylists();
+        }, SERVER_INFO_INTERVAL_MS);
         await this.connect();
     }
 
@@ -157,6 +165,55 @@ class Jellyfin extends utils.Adapter {
             this.log.debug(`Initial session list failed: ${(e as Error).message}`);
         }
         this.openSocket();
+        void this.refreshPlaylists();
+    }
+
+    /** Loads the playlists of all users, writes `server.playlists` and the selection list of `command.playPlaylist`. */
+    private async refreshPlaylists(): Promise<void> {
+        const api = this.api;
+        if (!api || this.stopping) {
+            return;
+        }
+        try {
+            const users = await api.getUsers();
+            const lists = [];
+            for (const user of users) {
+                lists.push(await api.getPlaylists(user.Id));
+            }
+            this.playlists = mergePlaylists(lists);
+        } catch (e) {
+            this.log.debug(`Loading the playlists failed: ${(e as Error).message}`);
+            return;
+        }
+        await this.writeValue('server.playlists', JSON.stringify(this.playlists));
+        const json = JSON.stringify(playlistStates(this.playlists));
+        if (json !== this.playlistStatesJson) {
+            this.playlistStatesJson = json;
+            for (const id of this.knownDevices) {
+                await this.applyPlaylistStates(id);
+            }
+        }
+    }
+
+    /**
+     * Writes the playlists as value list of `command.playPlaylist` of one device (selection in VIS and admin).
+     *
+     * @param id - device object id
+     */
+    private async applyPlaylistStates(id: string): Promise<void> {
+        if (!this.playlistStatesJson) {
+            return;
+        }
+        const stateId = `${id}.command.playPlaylist`;
+        try {
+            // @KI_HINWEIS: extendObject merges common.states – clear first, otherwise deleted playlists would stay
+            await this.extendObject(stateId, { common: { states: null } });
+            await this.extendObject(stateId, {
+                common: { states: JSON.parse(this.playlistStatesJson) as Record<string, string> },
+            });
+        } catch (e) {
+            this.log.debug(`Updating the playlist selection of ${id} failed: ${(e as Error).message}`);
+        }
     }
 
     /**
@@ -516,6 +573,7 @@ class Jellyfin extends utils.Adapter {
             }
             await this.extendObject(stateId, { type: 'state', common, native: {} });
         }
+        await this.applyPlaylistStates(id);
         // `media.repeat` was a string with the Jellyfin names up to 0.1.3
         const repeat = await this.getStateAsync(`${id}.media.repeat`);
         if (repeat && typeof repeat.val === 'string') {
@@ -717,24 +775,28 @@ class Jellyfin extends utils.Adapter {
                 await this.afterValueCommand(id, ok);
                 return;
             }
-            case 'command.playTitle': {
+            case 'command.playTitle':
+            case 'command.playPlaylist':
+            case 'command.playShuffled': {
                 const term = typeof state.val === 'string' ? state.val.trim() : '';
                 if (!term) {
                     return;
                 }
-                if (this.allowed(device, s, 'PlayNow', { type: 'playstate' })) {
+                const shuffle = key === 'command.playShuffled';
+                const command = shuffle ? 'PlayShuffle' : 'PlayNow';
+                if (this.allowed(device, s, command, { type: 'playstate' })) {
                     await this.run(
                         id,
-                        'PlayNow',
+                        command,
                         async () => {
-                            const item = /^[0-9a-f]{32}$/i.test(term)
-                                ? { Id: term, Name: term }
-                                : await api.findItem(term, s.UserId);
+                            const item = await this.resolveItem(key, term, s.UserId);
                             if (!item) {
                                 throw new Error(`nothing found for "${term}"`);
                             }
-                            this.log.info(`${this.deviceName(device, s)}: playing "${itemLabel(item)}"`);
-                            await api.playNow(s.Id, [item.Id]);
+                            this.log.info(
+                                `${this.deviceName(device, s)}: playing "${itemLabel(item)}"${shuffle ? ' in random order' : ''}`,
+                            );
+                            await api.playNow(s.Id, [item.Id], shuffle);
                         },
                         state.val,
                     );
@@ -875,6 +937,28 @@ class Jellyfin extends utils.Adapter {
      * @param device - device object id
      * @param s - session
      */
+    /**
+     * Finds the item for a play command: item id, a known playlist or a search on the server.
+     *
+     * @param key - command state (relative to the device)
+     * @param term - name or id written to the state
+     * @param userId - user of the session (library permissions of this user apply)
+     */
+    private async resolveItem(key: string, term: string, userId?: string): Promise<ItemInfo | undefined> {
+        if (/^[0-9a-f]{32}$/i.test(term)) {
+            return { Id: term, Name: term };
+        }
+        if (key !== 'command.playTitle') {
+            const playlist = findPlaylist(this.playlists, term);
+            if (playlist) {
+                return { Id: playlist.id, Name: playlist.name, Type: 'Playlist' };
+            }
+        }
+        const types =
+            key === 'command.playPlaylist' ? 'Playlist' : key === 'command.playShuffled' ? SHUFFLE_TYPES : undefined;
+        return this.api?.findItem(term, userId, types);
+    }
+
     private deviceName(device: string, s: SessionInfo | undefined): string {
         return s?.DeviceName || this.preparedDevices.get(device) || device;
     }
