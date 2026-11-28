@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { normalizeBaseUrl } from './api';
 import { parseGeneralCommand, parseMessage } from './commands';
 import { deviceObjectId } from './ids';
-import { checkCommand, coverUrl, sessionValues } from './session';
+import { checkCommand, coverUrl, reportSummary, sessionValues } from './session';
 import type { SessionInfo } from './types';
 
 const opts = { baseUrl: 'http://jf:8096', coverHeight: 300 };
@@ -150,5 +150,25 @@ describe('parseMessage / parseGeneralCommand', () => {
         });
         expect(parseGeneralCommand('Go Home')).to.equal(null);
         expect(parseGeneralCommand('{"Name":1}')).to.equal(null);
+    });
+});
+
+describe('reportSummary', () => {
+    it('summarises a playing session', () => {
+        expect(reportSummary(tv)).to.equal(
+            'playing, "Movie", position 600 s, volume -, muted false, remote control true, client "Jellyfin Android TV"',
+        );
+    });
+
+    it('shows pause, volume and mute', () => {
+        const s: SessionInfo = {
+            ...tv,
+            PlayState: { ...tv.PlayState, IsPaused: true, VolumeLevel: 40, IsMuted: true },
+        };
+        expect(reportSummary(s)).to.contain('paused').and.contain('volume 40').and.contain('muted true');
+    });
+
+    it('says idle when nothing plays', () => {
+        expect(reportSummary({ ...tv, NowPlayingItem: undefined })).to.match(/^idle, volume -/);
     });
 });

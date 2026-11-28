@@ -149,6 +149,10 @@ Jellyfin is a free software project. This adapter is not affiliated with or endo
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+- (Schimi1983) With log level "debug" the adapter logs what Jellyfin reports for each device (play/pause, position, volume, mute) whenever it changes - helps to find out whether a wrong state comes from Jellyfin or from the adapter
+
 ### 0.1.7 (2026-11-20)
 
 - (Schimi1983) The elapsed time (`media.elapsed`, `media.seek`) now counts on every second while playing, instead of jumping with each report of the server

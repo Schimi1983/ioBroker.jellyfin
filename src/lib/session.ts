@@ -63,6 +63,32 @@ export function reportsAudio(s: SessionInfo): boolean {
     return typeof s.PlayState?.VolumeLevel === 'number';
 }
 
+// @KI_HINWEIS: DLNA renderers (e.g. Sonos via the Jellyfin DLNA plugin) can report a state that does not match the
+//     device (pause not reported). This summary is logged on debug level whenever it changes, so a log shows what
+//     Jellyfin reported and whether a wrong state comes from the server or from the adapter.
+/**
+ * One-line summary of what Jellyfin reports for a session (for the debug log).
+ *
+ * @param s - session (merged view of a device)
+ */
+export function reportSummary(s: SessionInfo): string {
+    const ps = s.PlayState ?? {};
+    const item = s.NowPlayingItem;
+    const parts: string[] = [];
+    if (item) {
+        parts.push(ps.IsPaused ? 'paused' : 'playing');
+        parts.push(`"${item.Name ?? ''}"`);
+        parts.push(`position ${ps.PositionTicks != null ? Math.round(ps.PositionTicks / TICKS_PER_SECOND) : '-'} s`);
+    } else {
+        parts.push('idle');
+    }
+    parts.push(`volume ${typeof ps.VolumeLevel === 'number' ? ps.VolumeLevel : '-'}`);
+    parts.push(`muted ${ps.IsMuted === true}`);
+    parts.push(`remote control ${s.SupportsRemoteControl === true}`);
+    parts.push(`client "${s.Client ?? ''}"`);
+    return parts.join(', ');
+}
+
 /**
  * Maps a session to state values (keys relative to the device object). Keys whose value is unknown are omitted
  * so that existing values are not overwritten.

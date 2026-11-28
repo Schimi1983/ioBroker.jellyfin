@@ -84,6 +84,8 @@ class Jellyfin extends utils.Adapter {
   /** Playback position per playing device (counted on between the server reports). */
   progress = /* @__PURE__ */ new Map();
   progressTimer;
+  /** Last logged report summary per device (debug log only when it changes). */
+  lastReport = /* @__PURE__ */ new Map();
   processing = false;
   constructor(options = {}) {
     super({ ...options, name: "jellyfin" });
@@ -397,6 +399,13 @@ class Jellyfin extends utils.Adapter {
       if (s.NowPlayingItem) {
         playing++;
       }
+      if (this.log.level === "debug" || this.log.level === "silly") {
+        const summary = (0, import_session.reportSummary)(s);
+        if (this.lastReport.get(id) !== summary) {
+          this.lastReport.set(id, summary);
+          this.log.debug(`${this.deviceName(id, s)}: Jellyfin reports ${summary}`);
+        }
+      }
       const values = (0, import_session.sessionValues)(s, opts);
       const progress = (0, import_progress.updateProgress)(this.progress.get(id), s, now);
       if (progress) {
@@ -488,6 +497,8 @@ class Jellyfin extends utils.Adapter {
       return;
     }
     this.offlineDevices.add(id);
+    this.lastReport.delete(id);
+    this.log.debug(`${this.deviceName(id, void 0)}: no longer reported by Jellyfin`);
     await this.writeValue(`${id}.info.reachable`, false);
     await this.writeValue(`${id}.info.remoteControl`, false);
     await this.writeValue(`${id}.media.state`, "stop");

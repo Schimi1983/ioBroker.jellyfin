@@ -21,6 +21,7 @@ __export(session_exports, {
   TICKS_PER_SECOND: () => TICKS_PER_SECOND,
   checkCommand: () => checkCommand,
   coverUrl: () => coverUrl,
+  reportSummary: () => reportSummary,
   reportsAudio: () => reportsAudio,
   sessionValues: () => sessionValues
 });
@@ -61,6 +62,24 @@ function coverUrl(s, opts) {
 function reportsAudio(s) {
   var _a;
   return typeof ((_a = s.PlayState) == null ? void 0 : _a.VolumeLevel) === "number";
+}
+function reportSummary(s) {
+  var _a, _b, _c;
+  const ps = (_a = s.PlayState) != null ? _a : {};
+  const item = s.NowPlayingItem;
+  const parts = [];
+  if (item) {
+    parts.push(ps.IsPaused ? "paused" : "playing");
+    parts.push(`"${(_b = item.Name) != null ? _b : ""}"`);
+    parts.push(`position ${ps.PositionTicks != null ? Math.round(ps.PositionTicks / TICKS_PER_SECOND) : "-"} s`);
+  } else {
+    parts.push("idle");
+  }
+  parts.push(`volume ${typeof ps.VolumeLevel === "number" ? ps.VolumeLevel : "-"}`);
+  parts.push(`muted ${ps.IsMuted === true}`);
+  parts.push(`remote control ${s.SupportsRemoteControl === true}`);
+  parts.push(`client "${(_c = s.Client) != null ? _c : ""}"`);
+  return parts.join(", ");
 }
 function sessionValues(s, opts) {
   var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
@@ -146,6 +165,7 @@ function checkCommand(s, kind) {
   TICKS_PER_SECOND,
   checkCommand,
   coverUrl,
+  reportSummary,
   reportsAudio,
   sessionValues
 });

@@ -8,7 +8,7 @@ import { displayName, groupSessions } from './lib/devices';
 import { DEVICE_CHANNELS, DEVICE_STATES, REPEAT_MODES, SERVER_STATES, toCommon } from './lib/objects';
 import { tr } from './lib/names';
 import { parseGeneralCommand, parseMessage, type MessagePayload } from './lib/commands';
-import { checkCommand, reportsAudio, sessionValues, type CommandKind } from './lib/session';
+import { checkCommand, reportSummary, reportsAudio, sessionValues, type CommandKind } from './lib/session';
 import { progressValues, updateProgress, type Progress } from './lib/progress';
 import type { ItemInfo, PlaystateCommand, RepeatMode, SessionInfo, SocketMessage, SystemInfo } from './lib/types';
 
@@ -78,6 +78,8 @@ class Jellyfin extends utils.Adapter {
     /** Playback position per playing device (counted on between the server reports). */
     private progress = new Map<string, Progress>();
     private progressTimer: ioBroker.Interval | undefined;
+    /** Last logged report summary per device (debug log only when it changes). */
+    private lastReport = new Map<string, string>();
     private processing = false;
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
@@ -422,6 +424,13 @@ class Jellyfin extends utils.Adapter {
             if (s.NowPlayingItem) {
                 playing++;
             }
+            if (this.log.level === 'debug' || this.log.level === 'silly') {
+                const summary = reportSummary(s);
+                if (this.lastReport.get(id) !== summary) {
+                    this.lastReport.set(id, summary);
+                    this.log.debug(`${this.deviceName(id, s)}: Jellyfin reports ${summary}`);
+                }
+            }
             const values = sessionValues(s, opts);
             const progress = updateProgress(this.progress.get(id), s, now);
             if (progress) {
@@ -525,6 +534,8 @@ class Jellyfin extends utils.Adapter {
             return;
         }
         this.offlineDevices.add(id);
+        this.lastReport.delete(id);
+        this.log.debug(`${this.deviceName(id, undefined)}: no longer reported by Jellyfin`);
         await this.writeValue(`${id}.info.reachable`, false);
         await this.writeValue(`${id}.info.remoteControl`, false);
         await this.writeValue(`${id}.media.state`, 'stop');
